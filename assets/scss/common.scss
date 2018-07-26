@@ -1,0 +1,44 @@
+@import "variable.scss";
+
+/* hello style */
+._hello {opacity: 0; transition: all 500ms;
+    &._visible {opacity: 1;}
+    &._left {transform: translateX(-50px);
+        &._visible {transform: translateX(0);}
+    }
+    &._right {transform: translateX(50px);
+        &._visible {transform: translateX(0);}
+    }
+}
+
+/* button style */
+._btn {display: flex; width: 100%; border: none; border-radius: 0; align-items: center; justify-content: center; -webkit-appearance: none; cursor: pointer;
+    &.h40 {height: 40px; font-size: 17px;}
+
+    &.c1 {border: 1px solid #000000; background: #000000; color: #ffffff;}
+    &.c2 {border: 1px solid #333333; background: #333333; color: #ffffff;}
+}
+
+
+/* checkbox style */
+$checkboxSize: 16px;
+label._checkbox {display: flex; position: relative; padding: 0 0 0 24px;
+    > ._txt {
+        &:before {display: block; content: ''; position: absolute; top: 1ex; left: 0; width: $checkboxSize; height: $checkboxSize; margin-top: -($checkboxSize / 2); background: url(../images/common/checkbox.png) 0 0 no-repeat;}
+    }
+    input {position: absolute; top: 5px; left: 0; width: 1px; height: 1px; opacity: 0; cursor: pointer;
+        &:checked + ._txt:before {background-position-y: -16px;}
+        &:focus + ._txt:before {outline: 1px dotted #000000;}
+    }
+}
+
+/* radio style */
+$radioSize: 16px;
+label._radio {display: flex; position: relative; padding: 0 0 0 24px;
+    > ._txt {
+        &:before {display: block; content: ''; position: absolute; top: 1ex; left: 0; width: $radioSize; height: $radioSize; margin-top: -($radioSize / 2); background: url(../images/common/radio.png) 0 0 no-repeat;}
+    }
+    input {position: absolute; top: 5px; left: 0; width: 1px; height: 1px; opacity: 0; cursor: pointer;
+        &:checked + ._txt:before {background-position-y: -16px;}
+    }
+}
