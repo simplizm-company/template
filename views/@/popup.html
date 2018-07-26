@@ -16,6 +16,7 @@
     <script src="../../assets/js/library/jquery-3.2.1.min.js"></script>
     <script src="../../assets/js/plugin/cookie.js"></script>
     <script src="../../assets/js/plugin/slick.js"></script>
+    <script src="../../assets/js/plugin/sunrise.js"></script>
     <script src="../../assets/js/ui.js"></script>
 </head>
 <body>
@@ -25,17 +26,18 @@
         </header>
 
         <article id="container">
-            <label class="_checkbox">
-                <input type="checkbox">
-                <div class="_txt">checkbox style 01</div>
-            </label>
-            <label class="_radio">
-                <input type="radio">
-                <div class="_txt">radio style 01</div>
-            </label>
-            <input type="text">
-            <button class="_btn h40 c1">button 01</button>
-            <button class="_btn h40 c2">button 02</button>
+            <button class="_btn h40 c1">layerpopup call</button>
+            <div class="ex"></div>
+            <script>
+                var popup1 = sunrise('../@popup/popup-01.html', {
+                    text: '1'
+                });
+                /*var popup2 = sunrise('', {
+                    text: '2'
+                });*/
+
+                console.log(popup1);
+            </script>
         </article>
 
         <footer id="footer">

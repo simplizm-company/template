@@ -41,3 +41,13 @@ label._radio {display: flex; position: relative; padding: 0 0 0 24px;
         &:checked + ._txt:before {background-position-y: -16px;}
     }
 }
+
+/* layerpopup style */
+._sunrise-wrapper {position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; height: 100vh;
+    ._sunrise-back {position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7);}
+    ._sunrise-outer {position: absolute; opacity: 0; transform: translateY(50px); transition: opacity 500ms, transform 500ms;
+        &._visible {opacity: 1; transform: translateY(0);}
+        ._sunrise-inner {overflow-y: auto; background: #ffffff;}
+        ._sunrise-close {position: absolute;}
+    }
+}

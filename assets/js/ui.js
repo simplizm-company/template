@@ -20,53 +20,28 @@
         return $.when.apply($, dfds);
     }
 
-    ui.init = (function(_){
-        var getElements = function(){
-            _.$html      = $('html');
-            _.$body      = $('body');
-            _.$wrap      = $('#wrap');
-            _.$header    = $('#header');
-            _.$gnb       = $('#gnb');
-            _.$container = $('#container');
-            _.$main      = $('#main');
-            _.$contents  = $('#contents');
-            _.$footer    = $('#footer');
-            _.$hello     = $('._hello');
-        }
+    ui.setElementsVariable = function () {
+        ui.$html      = $('html');
+        ui.$body      = $('body');
+        ui.$wrap      = $('#wrap');
+        ui.$header    = $('#header');
+        ui.$gnb       = $('#gnb');
+        ui.$container = $('#container');
+        ui.$main      = $('#main');
+        ui.$contents  = $('#contents');
+        ui.$footer    = $('#footer');
+        ui.$hello     = $('._hello');
+    }
 
-        var getWindowSize = function(){
-            _.winsizeW = $(window).outerWidth();
-            _.winsizeH = $(window).outerHeight();
-        }
+    ui.getWindowSize = function () {
+        ui.winsizeW = $(window).outerWidth();
+        ui.winsizeH = $(window).outerHeight();
+    }
 
-        var getWindowScrl = function(){
-            _.winscrlT = $(window).scrollTop();
-            _.winscrlL = $(window).scrollLeft();
-        }
-
-        return {
-            onLoad : function(){
-                getElements();
-                getWindowSize();
-                getWindowScrl();
-                _.hello.init();
-                ui.matchmedia({
-                    matchDesktop : function(){
-                        console.log('pc');
-                    },
-                    matchMobile : function(){
-                        console.log('mobile');
-                    }
-                });
-            },
-            onResize : function(){
-                getWindowSize();
-            },
-            onScroll : function(){
-                getWindowScrl();
-            }
-        }
-    })(ui);
+    ui.getWindowScroll = function () {
+        ui.winscrlT = $(window).scrollTop();
+        ui.winscrlL = $(window).scrollLeft();
+    }
 
     ui.hasOwnProperty = function (org, src) {
         for(var prop in src){
@@ -107,17 +82,19 @@
         return {
             init : function(){
                 var self = this;
-                _.$hello.each(function(idx, obj){
-                    obj.t = $(obj).offset().top;
-                    obj.h = $(obj).outerHeight() / 2;
-                    obj.p = obj.t + obj.h;
-                    obj.e = 'scroll.lmotion'+idx;
-
-                    self.scroll(obj);
-                    $(window).on(obj.e, function(){
+                if (_.$hello) {
+                    _.$hello.each(function(idx, obj){
+                        obj.t = $(obj).offset().top;
+                        obj.h = $(obj).outerHeight() / 2;
+                        obj.p = obj.t + obj.h;
+                        obj.e = 'scroll.lmotion'+idx;
+    
                         self.scroll(obj);
+                        $(window).on(obj.e, function(){
+                            self.scroll(obj);
+                        });
                     });
-                });
+                }
             },
             scroll : function(obj){
                 if(_.winscrlT + _.winsizeH > obj.p && !obj.visible){
@@ -162,7 +139,6 @@
 
             tab.def.idx = idx;
         }
-
         var tabAction = (function(){
             return {
                 def : {
@@ -198,18 +174,29 @@
     }
 
     $(document).ready(function () {
+        ui.setElementsVariable();
         ui.textMarginCut();
     });
 
     $(window).on({
         'load' : function(){
-            ui.init.onLoad();
+            ui.getWindowSize();
+            ui.getWindowScroll();
+            ui.hello.init();
+            ui.matchmedia({
+                matchDesktop : function(){
+                    console.log('pc');
+                },
+                matchMobile : function(){
+                    console.log('mobile');
+                }
+            });
         },
         'resize' : function(){
-            ui.init.onResize();
+            ui.getWindowSize();
         },
         'scroll' : function(){
-            ui.init.onScroll();
+            ui.getWindowScroll();
         }
     });
 })(jQuery);
