@@ -33,8 +33,9 @@
         var _ = this;
         _.$body = $('body');
         _.$wrapper = _.$body.append('<div class="_sunrise-wrapper"></div>').children('._sunrise-wrapper:last-child');
-        _.$back = _.$wrapper.append('<div class="_sunrise-back"></div>').children('._sunrise-back');
-        _.$outer = _.$wrapper.append('<div class="_sunrise-outer"></div>').children('._sunrise-outer');
+        _.$cell = _.$wrapper.append('<div class="_sunrise-cell"></div>').children('._sunrise-cell');
+        _.$back = _.$cell.append('<div class="_sunrise-back"></div>').children('._sunrise-back');
+        _.$outer = _.$cell.append('<div class="_sunrise-outer"></div>').children('._sunrise-outer');
         _.$inner = _.$outer.append('<div class="_sunrise-inner"></div>').children('._sunrise-inner');
         _.$close = _.$outer.append('<button class="_sunrise-close"></button>').children('._sunrise-close');
     }

@@ -91,11 +91,7 @@ label._radio {
 
 /* layerpopup style */
 ._sunrise-wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: table;
   position: fixed;
   top: 0;
   right: 0;
@@ -103,29 +99,36 @@ label._radio {
   left: 0;
   width: 100vw;
   height: 100vh; }
-  ._sunrise-wrapper ._sunrise-back {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+  ._sunrise-wrapper ._sunrise-cell {
+    display: table-cell;
+    position: relative;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7); }
-  ._sunrise-wrapper ._sunrise-outer {
-    flex: 0 0 auto;
-    position: absolute;
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 500ms, transform 500ms; }
-    ._sunrise-wrapper ._sunrise-outer._visible {
-      opacity: 1;
-      transform: translateY(0); }
-    ._sunrise-wrapper ._sunrise-outer ._sunrise-inner {
-      overflow-y: auto;
-      background: #ffffff; }
-    ._sunrise-wrapper ._sunrise-outer ._sunrise-close {
-      position: absolute; }
+    text-align: center;
+    vertical-align: middle; }
+    ._sunrise-wrapper ._sunrise-cell ._sunrise-back {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7); }
+    ._sunrise-wrapper ._sunrise-cell ._sunrise-outer {
+      display: inline-block;
+      flex: 0 0 auto;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 500ms, transform 500ms; }
+      ._sunrise-wrapper ._sunrise-cell ._sunrise-outer._visible {
+        opacity: 1;
+        transform: translateY(0); }
+      ._sunrise-wrapper ._sunrise-cell ._sunrise-outer ._sunrise-inner {
+        overflow-y: auto;
+        background: #ffffff; }
+      ._sunrise-wrapper ._sunrise-cell ._sunrise-outer ._sunrise-close {
+        position: absolute; }
 
 ._layer-popup img {
   max-width: 100%; }
