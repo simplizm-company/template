@@ -44,23 +44,10 @@
         if (_.options.centerMode) {
             _.$outer.css({'max-height': '80vh'});
             _.$inner.css({'max-height': '80vh'});
-            _.setInnerPosition();
             _.$outer.addClass('_visible');
-            _.popupResponsive();
         } else {
 
         }
-    }
-
-    Sunrise.prototype.setInnerPosition = function () {
-        var _ = this;
-
-        _.innerWidth = _.$inner.width();
-        _.innerHeight = _.$inner.height();
-        _.$outer.css({
-            'top': ($(window).height() - _.innerHeight) / 2,
-            'left': ($(window).width() - _.innerWidth) / 2
-        });
     }
 
     Sunrise.prototype.getAjaxPopup = function () {
@@ -79,13 +66,6 @@
                     _.setInnerStyle();
                 }
             }
-        });
-    }
-
-    Sunrise.prototype.popupResponsive = function () {
-        var _ = this;
-        $(window).on('resize.sunrise'+_.options.pluginIndex, function () {
-            _.setInnerPosition();
         });
     }
 

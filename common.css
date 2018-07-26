@@ -91,8 +91,6 @@ label._radio {
 
 /* layerpopup style */
 ._sunrise-wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,7 +111,6 @@ label._radio {
     height: 100vh;
     background: rgba(0, 0, 0, 0.7); }
   ._sunrise-wrapper ._sunrise-outer {
-    flex: 0 0 auto;
     position: absolute;
     opacity: 0;
     transform: translateY(50px);
@@ -128,4 +125,5 @@ label._radio {
       position: absolute; }
 
 ._layer-popup img {
-  max-width: 100%; }
+  max-width: 100%;
+  position: relative; }
