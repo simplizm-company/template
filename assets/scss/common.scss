@@ -14,7 +14,6 @@
 /* button style */
 ._btn {display: flex; width: 100%; border: none; border-radius: 0; align-items: center; justify-content: center; -webkit-appearance: none; cursor: pointer;
     &.h40 {height: 40px; font-size: 17px;}
-
     &.c1 {border: 1px solid #000000; background: #000000; color: #ffffff;}
     &.c2 {border: 1px solid #333333; background: #333333; color: #ffffff;}
 }
