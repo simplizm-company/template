@@ -1,5 +1,7 @@
 // Modules 호출
 var gulp = require('gulp');
+var path = require('path');
+var del = require('del');
 
 // Gulp의 concat 패키지 모듈 호출
 var concat = require('gulp-concat');
@@ -18,13 +20,19 @@ gulp.task('server', ['fonts', 'images', 'html', 'js', 'sass', 'css'], function (
             baseDir: 'project/dist'
         }
     });
-
     gulp.watch('project/src/assets/fonts/**/*.*', ['fonts']);
     gulp.watch('project/src/assets/images/**/*.*', ['images']);
     gulp.watch('project/src/**/*.html', ['html']);
     gulp.watch('project/src/assets/js/**/*.js', ['js']);
     gulp.watch('project/src/assets/scss/**/*.scss', ['sass']);
     gulp.watch('project/src/assets/css/**/*.css', ['css']);
+    gulp.watch('project/src/**', function (e) {
+        if (e.type === 'deleted') {
+            var filePathFromSrc = path.relative(path.resolve('project/src/'), e.path);
+            var destFilePath = path.resolve('project/dist/', filePathFromSrc);
+            del.sync(destFilePath);
+        }
+    });
     gulp.watch('project/dist/**/*.*', browserSync.reload);
 });
 
@@ -39,11 +47,20 @@ gulp.task('html', function () {
 
 gulp.task('js', function () {
     return gulp
-        .src('project/src/assets/js/**/*.js')
-        // .pipe(concat('conbined.js')) 하나의 js파일로 병합
+        // 모든 js파일을 하나의 파일로 압축할 때 사용
+        // .src([
+        //     'project/src/assets/js/library/jquery-3.2.1.min.js',
+        //     'project/src/assets/js/plugin/cookie.js',
+        //     'project/src/assets/js/plugin/slick.js',
+        //     'project/src/assets/js/plugin/sunrise.js',
+        //     'project/src/assets/js/ui.js'
+        // ])
+        // .pipe(concat('conbined.js'))
+        // .pipe(gulp.dest('project/dist/assets/js'))
+        // .pipe(uglify())
+        // .pipe(rename('combined.min.js'))
         // .pipe(gulp.dest('project/dist/assets/js'));
-        // .pipe(uglify()) js파일 압축
-        // .pipe(renmae('combined.min.js)) js 압축파일 이름 변경
+        .src('project/src/assets/js/**/*.js')
         .pipe(gulp.dest('project/dist/assets/js'));
 });
 

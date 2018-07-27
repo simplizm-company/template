@@ -48,7 +48,7 @@
 @mixin ellipsis2 ($line-height) {
     display: -webkit-box;
     overflow: hidden;
-    max-height: ($line-height * 2);
+    height: ($line-height * 2px);
     text-overflow: ellipsis;
     word-break: break-all;
     -webkit-line-clamp: 2;
