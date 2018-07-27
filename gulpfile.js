@@ -7,11 +7,39 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
+var fileinclude = require('gulp-file-include');
+var browserSync = require('browser-sync').create();
+var clean = require('gulp-clean');
 
-// Gulp.task() 를 사용해 기본 (Default) 테스크를 정의
+gulp.task('server', ['fonts', 'images', 'html', 'js', 'sass', 'css'], function () {
+    browserSync.init({
+        port: 1234,
+        server: {
+            baseDir: 'project/dist'
+        }
+    });
+
+    gulp.watch('project/src/assets/fonts/**/*.*', ['fonts']);
+    gulp.watch('project/src/assets/images/**/*.*', ['images']);
+    gulp.watch('project/src/**/*.html', ['html']);
+    gulp.watch('project/src/assets/js/**/*.js', ['js']);
+    gulp.watch('project/src/assets/scss/**/*.scss', ['sass']);
+    gulp.watch('project/src/assets/css/**/*.css', ['css']);
+    gulp.watch('project/dist/**/*.*', browserSync.reload);
+});
+
+gulp.task('html', function () {
+    return gulp.src('project/src/views/**/*.html')
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: '@file'
+        }))
+        .pipe(gulp.dest('project/dist/views'))
+});
+
 gulp.task('js', function () {
     return gulp
-        .src('project/assets/js/**/*.js')
+        .src('project/src/assets/js/**/*.js')
         // .pipe(concat('conbined.js')) 하나의 js파일로 병합
         // .pipe(gulp.dest('project/dist/assets/js'));
         // .pipe(uglify()) js파일 압축
@@ -21,22 +49,29 @@ gulp.task('js', function () {
 
 gulp.task('sass', function () {
     return gulp
-        .src('project/assets/scss/**/*.scss')
+        .src('project/src/assets/scss/**/*.scss')
         .pipe(sass({
             outputStyle: 'compressed'
         }).on('error', sass.logError))
         .pipe(autoprefixer({
             browsers: ['last 2 versions', 'ie >= 9']
         }))
-        .pipe(gulp.dest('project/assets/css'))
+        .pipe(gulp.dest('project/src/assets/css'))
 });
 
-gulp.task('watch', function () {
-    // gulp.watch('project/src/assets/js/**/*.js', ['js']);
-    gulp.watch('project/assets/scss/**/*.scss', ['sass'])
+gulp.task('css', function () {
+    return gulp.src('project/src/assets/css/**/*.css')
+        .pipe(gulp.dest('project/dist/assets/css'))
 });
 
-gulp.task('default', [
-    'sass',
-    'watch'
-])
+gulp.task('fonts', function () {
+    return gulp.src('project/src/assets/fonts/*.*')
+        .pipe(gulp.dest('project/dist/assets/fonts'))
+});
+
+gulp.task('images', function () {
+    return gulp.src('project/src/assets/images/**/*.*')
+        .pipe(gulp.dest('project/dist/assets/images'))
+});
+
+gulp.task('default', ['server']);
