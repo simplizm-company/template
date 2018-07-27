@@ -11,7 +11,6 @@ var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var fileinclude = require('gulp-file-include');
 var browserSync = require('browser-sync').create();
-var clean = require('gulp-clean');
 
 gulp.task('server', ['fonts', 'images', 'html', 'js', 'sass', 'css'], function () {
     browserSync.init({

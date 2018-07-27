@@ -58,14 +58,14 @@
             _.popupWidth = _.$outer.width();
             _.popupHeight = _.$outer.height();
             if (_.popupWidth > _.windowWidth * 0.8) {
-                _.$outer.css({'left' : '10vw'});
+                _.$outer.css({'left': '10vw'});
             } else {
-                _.$outer.css({'left' : _.windowScrollX + ((_.windowWidth - _.popupWidth) / 2)});
+                _.$outer.css({'left': _.windowScrollX + ((_.windowWidth - _.popupWidth) / 2)});
             }
             if (_.popupHeight > _.windowHeight * 0.8) {
-                _.$outer.css({'top' : '10vh'});
+                _.$outer.css({'top': '10vh'});
             } else {
-                _.$outer.css({'top' : _.windowScrollY + ((_.windowHeight - _.popupHeight) / 2)});
+                _.$outer.css({'top': _.windowScrollY + ((_.windowHeight - _.popupHeight) / 2)});
             }
         } else {
             _.getWindowProperty();

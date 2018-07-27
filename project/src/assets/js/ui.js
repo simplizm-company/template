@@ -5,21 +5,6 @@
         var ui = window.ui = {}
     }
 
-    $.fn.imagesLoaded = function(){
-        var $imgs = this.find('img[src!=""]'), dfds = [];
-        if (!$imgs.length){
-            return $.Deferred().resolve().promise();
-        }
-        $imgs.each(function(){
-            var dfd = $.Deferred(), img = new Image();
-            dfds.push(dfd);
-            img.onload = function(){dfd.resolve();}
-            img.onerror = function(){dfd.resolve();}
-            img.src = this.src;
-        });
-        return $.when.apply($, dfds);
-    }
-
     ui.setElementsVariable = function () {
         ui.$html      = $('html');
         ui.$body      = $('body');
@@ -57,9 +42,9 @@
         return org;
     }
 
-    ui.slider = (function(_){
+    ui.slider = (function (_) {
         return {
-            mainVisual : function(){
+            mainVisual : function () {
                 this.$mainVisual = $('#main .main_visual .slick-wrap').slick({
                     fade : true,
                     arrows : true,
@@ -73,14 +58,14 @@
         }
     })(ui);
 
-    ui.inputfile = function(target){
+    ui.inputfile = function (target) {
         var $target = $(target), value = $target.val();
         $target.next().val(value);
     }
 
-    ui.hello = (function(_){
+    ui.hello = (function (_) {
         return {
-            init : function(){
+            init : function () {
                 var self = this;
                 if (_.$hello) {
                     _.$hello.each(function(idx, obj){
@@ -88,15 +73,14 @@
                         obj.h = $(obj).outerHeight() / 2;
                         obj.p = obj.t + obj.h;
                         obj.e = 'scroll.lmotion'+idx;
-    
                         self.scroll(obj);
-                        $(window).on(obj.e, function(){
+                        $(window).on(obj.e, function () {
                             self.scroll(obj);
                         });
                     });
                 }
             },
-            scroll : function(obj){
+            scroll : function (obj) {
                 if(_.winscrlT + _.winsizeH > obj.p && !obj.visible){
                     $(obj).addClass('_visible');
                     $(window).off(obj.e);
@@ -106,31 +90,31 @@
         }
     })(ui);
 
-    ui.matchmedia = function(settings){
+    ui.matchmedia = function (settings) {
         var defaults = {
-            matchDesktop : function(){},
-            matchMobile : function(){}
+            matchDesktop : function () {},
+            matchMobile : function () {}
         };
         var opt = $.extend({}, defaults, settings);
         var media = window.matchMedia('(max-width: 750px)');
 
-        function matchesAction(paramse){
-            if(!paramse.matches){
+        function matchesAction (paramse) {
+            if (!paramse.matches) {
                 opt.matchDesktop();
-            }else{
+            } else {
                 opt.matchMobile();
             }
         }
 
-        if(matchMedia){
+        if (matchMedia) {
             matchesAction(media);
-            media.addListener(function(parameter){
+            media.addListener(function (parameter) {
                 matchesAction(parameter);
             });
         }
     }
 
-    ui.tabAction = function(navi, cont){
+    ui.tabAction = function (navi, cont) {
         var _ = ui;
         function action(tab, idx){
             tab.def.$navi.eq(idx).addClass('on').siblings().removeClass('on');
@@ -139,16 +123,16 @@
 
             tab.def.idx = idx;
         }
-        var tabAction = (function(){
+        var tabAction = (function () {
             return {
                 def : {
                     idx : 0,
                     $navi : $(navi).children(),
                     $cont : $(cont).children()
                 },
-                init : function(){
+                init : function () {
                     var _this = this;
-                    _this.def.$navi.on('click', function(){
+                    _this.def.$navi.on('click', function () {
                         action(_this, $(this).index());
                     });
                     return _this;
@@ -179,23 +163,23 @@
     });
 
     $(window).on({
-        'load' : function(){
+        'load' : function () {
             ui.getWindowSize();
             ui.getWindowScroll();
             ui.hello.init();
             ui.matchmedia({
-                matchDesktop : function(){
+                matchDesktop : function () {
                     console.log('pc');
                 },
-                matchMobile : function(){
+                matchMobile : function () {
                     console.log('mobile');
                 }
             });
         },
-        'resize' : function(){
+        'resize' : function () {
             ui.getWindowSize();
         },
-        'scroll' : function(){
+        'scroll' : function () {
             ui.getWindowScroll();
         }
     });
