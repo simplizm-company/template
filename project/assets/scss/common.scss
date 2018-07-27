@@ -39,21 +39,16 @@ label._radio {display: flex; position: relative; padding: 0 0 0 24px;
     }
     input {position: absolute; top: 5px; left: 0; width: 1px; height: 1px; opacity: 0; cursor: pointer;
         &:checked + ._txt:before {background-position-y: -16px;}
+        &:focus + ._txt:before {outline: 1px dotted #000000;}
     }
 }
 
 /* layerpopup style */
-._sunrise-wrapper {display: table; position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; height: 100vh;
-    ._sunrise-cell {display: table-cell; position: relative; width: 100vw; height: 100vh; text-align: center; vertical-align: middle;
-        ._sunrise-back {position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7);}
-        ._sunrise-outer {display: inline-block; flex: 0 0 auto; opacity: 0; transform: translateY(50px); transition: opacity 500ms, transform 500ms;
-            &._visible {opacity: 1; transform: translateY(0);}
-            ._sunrise-inner {overflow-y: auto; background: #ffffff;}
-            ._sunrise-close {position: absolute;}
-        }
+._sunrise-wrapper {
+    ._sunrise-back {position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1000; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7);}
+    ._sunrise-outer {position: absolute; z-index: 1000; opacity: 0; transform: translateY(50px); transition: opacity 500ms, transform 500ms;
+        &._visible {opacity: 1; transform: translateY(0);}
+        ._sunrise-inner {background: #ffffff;}
+        ._sunrise-close {position: absolute;}
     }
-}
-
-._layer-popup {
-    img {max-width: 100%;}
 }

@@ -26,18 +26,11 @@
         </header>
 
         <article id="container">
-            <button class="_btn h40 c1">layerpopup call</button>
+            <button class="_btn h40 c1" onclick="sunrise('../@popup/popup-01.html')">layerpopup call</button>
+            <button class="_btn h40 c1" onclick="sunrise('../@popup/popup-02.html')">layerpopup call</button>
+            <button class="_btn h40 c1" onclick="sunrise('../@popup/popup-03.html')">layerpopup call</button>
+            <button class="_btn h40 c1" onclick="sunrise('../@popup/popup-04.html', {centerMode: false})">layerpopup call</button>
             <div class="ex"></div>
-            <script>
-                var popup1 = sunrise('../@popup/popup-01.html', {
-                    text: '1'
-                });
-                /*var popup2 = sunrise('', {
-                    text: '2'
-                });*/
-
-                console.log(popup1);
-            </script>
         </article>
 
         <footer id="footer">
