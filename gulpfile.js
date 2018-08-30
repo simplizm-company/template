@@ -1,9 +1,7 @@
-// Modules 호출
 var gulp = require('gulp');
 var path = require('path');
 var del = require('del');
 
-// Gulp의 concat 패키지 모듈 호출
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
@@ -36,7 +34,8 @@ gulp.task('server', ['fonts', 'images', 'html', 'js', 'sass', 'css'], function (
 });
 
 gulp.task('html', function () {
-    return gulp.src('project/src/views/**/*.html')
+    return gulp
+        .src('project/src/views/**/*.html')
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file'
@@ -76,17 +75,20 @@ gulp.task('sass', function () {
 });
 
 gulp.task('css', function () {
-    return gulp.src('project/src/assets/css/**/*.css')
+    return gulp
+        .src('project/src/assets/css/**/*.css')
         .pipe(gulp.dest('project/dist/assets/css'))
 });
 
 gulp.task('fonts', function () {
-    return gulp.src('project/src/assets/fonts/*.*')
+    return gulp
+        .src('project/src/assets/fonts/*.*')
         .pipe(gulp.dest('project/dist/assets/fonts'))
 });
 
 gulp.task('images', function () {
-    return gulp.src('project/src/assets/images/**/*.*')
+    return gulp
+        .src('project/src/assets/images/**/*.*')
         .pipe(gulp.dest('project/dist/assets/images'))
 });
 

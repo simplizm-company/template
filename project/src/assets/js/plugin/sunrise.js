@@ -102,12 +102,14 @@
                     _.$inner.find('img').one('load', function (obj) {
                         idx++;
                         if (idx === max) {
+                            ui.textMarginCut(_.$inner);
                             _.setPopupStyle();
                             _.$outer.addClass('_visible');
                             _.EventsBinding();
                         }
                     });
                 } else {
+                    ui.textMarginCut(_.$inner);
                     _.setPopupStyle();
                     _.$outer.addClass('_visible');
                     _.EventsBinding();

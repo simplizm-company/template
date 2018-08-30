@@ -146,8 +146,8 @@
         return tabAction.init();
     }
 
-    ui.textMarginCut = function () {
-        $('._txt').each(function (idx, obj) {
+    ui.textMarginCut = function (target) {
+        target.find('._txt').each(function (idx, obj) {
             this.$inner = $(this).wrapInner('<div>').children('div');
             this.lineHeight = parseInt($(this).css('line-height'));
             this.fontSize = parseInt($(this).css('font-size'));
@@ -159,7 +159,7 @@
 
     $(document).ready(function () {
         ui.setElementsVariable();
-        ui.textMarginCut();
+        ui.textMarginCut($('body'));
     });
 
     $(window).on({
