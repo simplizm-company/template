@@ -8,7 +8,25 @@
 @@include('../@include/header.html')
 
         <article id="container">
-            <div class="_txt">11텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트텍스트 테스트</div>
+            <style>
+                #eclipse div div {height: 300px;}
+            </style>
+            <div id="eclipse">
+                <div class="eclipse-wrap">
+                    <div style="background: #000;">Slider 01</div>
+                    <div style="background: #333;">Slider 02</div>
+                    <div style="background: #666;">Slider 03</div>
+                    <div style="background: #999;">Slider 04</div>
+                </div>
+            </div>
+            <script>
+                $(window).on('load', function () {
+                    $('#eclipse').eclipse({
+                        a: '3',
+                        b: '2'
+                    });
+                });
+            </script>
         </article>
 
 @@include('../@include/footer.html')

@@ -1,13 +1,8 @@
 /*
- *
- * kronos v4.1.9 - simple, smart datepicker
- *
- * Copyright 2018, Newriver UI Development Team - Y.J.
- *
- * Webagency Newriver - http://www.newriver.co.kr/
- *
- * E-mail : shinyj1991@gmail.com
- *
+ * kronos for jQuery
+ * Version: 1.0.1
+ * Author: shinyongjun
+ * Website: http://www.simplizm.com/
  */
 
 ;(function($){
@@ -23,7 +18,7 @@
 
             var defaults = {
                 initDate : null,
-                nameSpace : '_kronos',
+                nameSpace : 'kronos',
                 format : 'yyyy-mm-dd',
                 visible : false,
                 disableWeekends : false,

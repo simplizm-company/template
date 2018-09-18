@@ -1,62 +1,30 @@
 (function($){
     'use strict';
 
-    if(typeof window.ui === 'undefined'){
+    if (typeof window.ui === 'undefined') {
         var ui = window.ui = {}
     }
 
     ui.setElementsVariable = function () {
         ui.$html      = $('html');
         ui.$body      = $('body');
-        ui.$wrap      = $('#wrap');
-        ui.$header    = $('#header');
-        ui.$gnb       = $('#gnb');
-        ui.$container = $('#container');
-        ui.$main      = $('#main');
-        ui.$contents  = $('#contents');
-        ui.$footer    = $('#footer');
-        ui.$hello     = $('._hello');
     }
 
-    ui.getWindowSize = function () {
-        ui.winsizeW = $(window).outerWidth();
-        ui.winsizeH = $(window).outerHeight();
-    }
-
-    ui.getWindowScroll = function () {
-        ui.winscrlT = $(window).scrollTop();
-        ui.winscrlL = $(window).scrollLeft();
-    }
-
-    ui.hasOwnProperty = function (org, src) {
-        for(var prop in src){
-            if(!hasOwnProperty.call(src, prop)){
-                continue;
-            }
-            if('object' === $.type(org[prop])){
-                org[prop] = ($.isArray(org[prop]) ? src[prop].slice(0) : ui.hasOwnProperty(org[prop], src[prop]));
-            }else{
-                org[prop] = src[prop];
-            }
-        }
-        return org;
-    }
-
-    ui.slider = (function (_) {
-        return {
-            mainVisual : function () {
-                this.$mainVisual = $('#main .main_visual .slick-wrap').slick({
-                    fade : true,
-                    arrows : true,
-                    dots : false,
-                    infinite : true,
-                    slidesToShow : 1,
-                    slidesToScroll : 1,
-                    accessibility : false
-                });
-            }
-        }
-    })(ui);
+    // ui.slider = (function (_) {
+    //     return {
+    //         mainVisual : function () {
+    //             this.$mainVisual = $('#main .main_visual .slick-wrap').slick({
+    //                 fade : true,
+    //                 arrows : true,
+    //                 dots : false,
+    //                 infinite : true,
+    //                 slidesToShow : 1,
+    //                 slidesToScroll : 1,
+    //                 accessibility : false
+    //             });
+    //         }
+    //     }
+    // })(ui);
 
     ui.inputfile = function (target) {
         var $target = $(target), value = $target.val();
@@ -89,30 +57,6 @@
             }
         }
     })(ui);
-
-    ui.matchmedia = function (settings) {
-        var defaults = {
-            matchDesktop : function () {},
-            matchMobile : function () {}
-        };
-        var opt = $.extend({}, defaults, settings);
-        var media = window.matchMedia('(max-width: 750px)');
-
-        function matchesAction (paramse) {
-            if (!paramse.matches) {
-                opt.matchDesktop();
-            } else {
-                opt.matchMobile();
-            }
-        }
-
-        if (matchMedia) {
-            matchesAction(media);
-            media.addListener(function (parameter) {
-                matchesAction(parameter);
-            });
-        }
-    }
 
     ui.tabAction = function (navi, cont) {
         var _ = ui;
@@ -147,7 +91,7 @@
     }
 
     ui.textMarginCut = function (target) {
-        target.find('._txt').each(function (idx, obj) {
+        target.find('._').each(function (idx, obj) {
             this.$inner = $(this).wrapInner('<div>').children('div');
             this.lineHeight = parseInt($(this).css('line-height'));
             this.fontSize = parseInt($(this).css('font-size'));
@@ -164,10 +108,9 @@
 
     $(window).on({
         'load' : function () {
-            ui.getWindowSize();
-            ui.getWindowScroll();
             ui.hello.init();
-            ui.matchmedia({
+
+            $$.matchmedia({
                 matchDesktop : function () {
                     console.log('pc');
                 },
@@ -177,10 +120,10 @@
             });
         },
         'resize' : function () {
-            ui.getWindowSize();
+            //
         },
         'scroll' : function () {
-            ui.getWindowScroll();
+            //
         }
     });
 })(jQuery);

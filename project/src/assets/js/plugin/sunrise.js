@@ -1,7 +1,7 @@
 /*
  * sunrise for jQuery
  * Version: 1.0.1
- * Author: Shin yongjun
+ * Author: shinyongjun
  * Website: http://www.simplizm.com/
  */
 
@@ -17,12 +17,15 @@
                 settings = settings === undefined ? {} : settings,
                 defaults = {
                     url: url,
+                    inline: false,
                     background: true,
                     centerMode: true,
                     computedScroll: false,
                     positionTop: 0,
                     positionLeft: 0,
-                    pluginIndex: pluginIndex++
+                    pluginIndex: pluginIndex++,
+                    openCallback: function () {},
+                    closeCallback: function () {}
                 }
 
             _.options = $.extend(defaults, settings);
@@ -43,12 +46,12 @@
     Sunrise.prototype.setElements = function () {
         var _ = this;
         _.$body = $('body');
-        _.$wrapper = _.$body.append('<div class="_sunrise-wrapper"></div>').children('._sunrise-wrapper:last-child');
+        _.$wrapper = _.$body.append('<div class="sunrise-wrapper"></div>').children('.sunrise-wrapper:last-child');
         if (_.options.background) {
-            _.$back = _.$wrapper.append('<div class="_sunrise-back" sunrise="close"></div>').children('._sunrise-back');
+            _.$back = _.$wrapper.append('<div class="sunrise-back" sunrise="close"></div>').children('.sunrise-back');
         }
-        _.$outer = _.$wrapper.append('<div class="_sunrise-outer"></div>').children('._sunrise-outer');
-        _.$inner = _.$outer.append('<div class="_sunrise-inner"></div>').children('._sunrise-inner');
+        _.$outer = _.$wrapper.append('<div class="sunrise-outer"></div>').children('.sunrise-outer');
+        _.$inner = _.$outer.append('<div class="sunrise-inner"></div>').children('.sunrise-inner');
     }
 
     Sunrise.prototype.setPopupStyle = function () {
@@ -58,12 +61,12 @@
             _.popupWidth = _.$outer.width();
             _.popupHeight = _.$outer.height();
             if (_.popupWidth > _.windowWidth * 0.8) {
-                _.$outer.css({'left': '10vw'});
+                _.$outer.css({'left': _.windowScrollX + _.windowWidth * 0.1});
             } else {
                 _.$outer.css({'left': _.windowScrollX + ((_.windowWidth - _.popupWidth) / 2)});
             }
             if (_.popupHeight > _.windowHeight * 0.8) {
-                _.$outer.css({'top': '10vh'});
+                _.$outer.css({'top': _.windowScrollY + _.windowHeight * 0.1});
             } else {
                 _.$outer.css({'top': _.windowScrollY + ((_.windowHeight - _.popupHeight) / 2)});
             }
@@ -86,36 +89,57 @@
     Sunrise.prototype.popupClose = function () {
         var _ = this;
         _.$wrapper.remove();
+        _.options.closeCallback();
+    }
+
+    Sunrise.prototype.openEvents = function (data) {
+        var _ = this;
+        ui.textMarginCut(_.$inner);
+        _.setPopupStyle();
+        _.$outer.addClass('_visible');
+        _.EventsBinding();
+        _.options.openCallback(data);
     }
 
     Sunrise.prototype.getAjaxPopup = function () {
         var _ = this;
-        $.ajax({
-            url: _.options.url,
-            timeout: 10000,
-            dataType: 'html',
-            success: function (data) {
-                _.$inner.append(data);
-                if (_.$inner.find('img').length) {
-                    var idx = 0;
-                    var max = _.$inner.find('img').length;
-                    _.$inner.find('img').one('load', function (obj) {
-                        idx++;
-                        if (idx === max) {
-                            ui.textMarginCut(_.$inner);
-                            _.setPopupStyle();
-                            _.$outer.addClass('_visible');
-                            _.EventsBinding();
-                        }
-                    });
-                } else {
-                    ui.textMarginCut(_.$inner);
-                    _.setPopupStyle();
-                    _.$outer.addClass('_visible');
-                    _.EventsBinding();
+        if (!_.options.inline) {
+            $.ajax({
+                url: _.options.url,
+                timeout: 10000,
+                dataType: 'html',
+                success: function (data) {
+                    _.$inner.append(data);
+                    if (_.$inner.find('img').length) {
+                        var idx = 0;
+                        var max = _.$inner.find('img').length;
+                        _.$inner.find('img').one('load', function (obj) {
+                            idx++;
+                            if (idx === max) {
+                                _.openEvents(data);
+                            }
+                        });
+                    } else {
+                        _.openEvents(data);
+                    }
                 }
+            });
+        } else {
+            var $data = _.$inner.append($(_.options.url).clone()).children(_.options.url);
+            $data.show();
+            if (_.$inner.find('img').length) {
+                var idx = 0;
+                var max = _.$inner.find('img').length;
+                _.$inner.find('img').one('load', function (obj) {
+                    idx++;
+                    if (idx === max) {
+                        _.openEvents();
+                    }
+                });
+            } else {
+                _.openEvents();
             }
-        });
+        }
     }
 
     Sunrise.prototype.init = function () {
