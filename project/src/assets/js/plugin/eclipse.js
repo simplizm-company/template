@@ -32,6 +32,8 @@
                 speed: 500                  // 전환 속도
             }
 
+            _.options = $.extend({}, _.defaults, settings);
+
             _.initials = {
                 thisIndex: null,
                 prevIndex: null,
@@ -45,10 +47,9 @@
                 startX: null,
                 startY: null,
                 moveX: null,
-                moveY: null
+                moveY: null,
+                transition: _.options.speed + 'ms'
             }
-
-            _.options = $.extend({}, _.defaults, settings);
             _.$eclipse = $(element);
 
             _.init(true);
@@ -98,7 +99,8 @@
             this.height = $(this).height();
             this.index = i;
             this.range = this.index - _.initials.thisIndex < 0 ? this.index - _.initials.thisIndex + _.initials.slideCount : this.index - _.initials.thisIndex;
-            this.point = Math.abs(this.range) == _.initials.slideCount - 1 ? this.range < 0 ? 1 : -1 : this.range;
+            // this.point = Math.abs(this.range) == _.initials.slideCount - 1 ? this.range < 0 ? 1 : -1 : this.range;
+            this.point = this.range;
             this.left = _.initials.slideWidth * this.point;
             this.transform = this.left;
 
@@ -124,18 +126,20 @@
         // 터치스타트, 마우스다운 실행
         var _ = this;
 
-        _.initials.touchstartFlag = true;
-        _.startX = e.originalEvent.touches ? e.originalEvent.touches[0].pageX : e.pageX;
-        _.startY = e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY;
-
-        $(document).on({
-            'mousemove': function (e) {
-                _.touchmove(e);
-            },
-            'mouseup': function (e) {
-                _.touchend(e);
-            }
-        })
+        if (!_.initials.touchstartFlag) {
+            _.initials.touchstartFlag = true;
+            _.startX = e.originalEvent.touches ? e.originalEvent.touches[0].pageX : e.pageX;
+            _.startY = e.originalEvent.touches ? e.originalEvent.touches[0].pageY : e.pageY;
+    
+            $(document).on({
+                'mousemove': function (e) {
+                    _.touchmove(e);
+                },
+                'mouseup': function (e) {
+                    _.touchend(e);
+                }
+            });
+        }
     }
 
     Eclipse.prototype.touchmove = function (e) {
@@ -144,6 +148,7 @@
 
         if (!_.initials.touchmoveFlag) {
             _.initials.touchmoveFlag = true;
+            _.setSideSlides();
         }
 
         if (_.initials.touchstartFlag) {
@@ -180,8 +185,6 @@
         var _ = this;
         if (_.initials.actionFlag) return;
         _.initials.actionFlag = true;
-        console.log(_.initials.prevIndex, _.initials.thisIndex, _.initials.nextIndex)
-        var transition = (_.options.speed !== undefined) ? _.options.speed + 'ms ease' : 'none';
         _.initials.thisIndex = _.computedIndex(_.initials.thisIndex + move);
         _.initials.nextIndex = _.computedIndex(_.initials.thisIndex + 1);
         _.initials.prevIndex = _.computedIndex(_.initials.thisIndex - 1);
@@ -191,40 +194,74 @@
         _.moveY = null;
 
         _.$slides.each(function () {
-            console.log(this.index, this.range, this.left);
-            console.log(_.initials.prevIndex, _.initials.thisIndex, _.initials.nextIndex)
+            var self = this;
+            this.point -= move;
+            this.left = _.initials.slideWidth * this.point;
+            this.range = this.index - _.initials.thisIndex < 0 ? this.index - _.initials.thisIndex + _.initials.slideCount : this.index - _.initials.thisIndex;
+            var transform = 'translate3d(' + this.left + 'px, 0, 0)';
+            $(this).stop().css(_.autoprefixer(0, _.initials.transition, transform));
+            if (this.index === _.initials.thisIndex) {
+                $(this).addClass('eclipse-active').siblings().removeClass('eclipse-active');
+            }
+
+            setTimeout(function () {
+                self.left = _.initials.slideWidth * (self.index - _.initials.thisIndex);
+                self.transform = 'translate3d(' + self.left + 'px, 0, 0)';
+                $(self).stop().css(_.autoprefixer(0, 'none', self.transform));
+                _.initials.actionFlag = false;
+                _.initials.touchstartFlag = false;
+                _.initials.touchmoveFlag = false;
+
+                console.log(self.index, self.point, self.range);
+            }, _.options.speed);
         });
+    }
 
-        // 여기 하는 중임
-        // left와 현재위치를 나눠야 할 거 같음
-        // _.$slides.each(function () {
-        //     var transform = 'translate3d(' + this.transform + 'px, 0, 0)';
-        //     $(this).css(_.autoprefixer(0, 'none', transform));
-        //     console.log('each');
-        // }).promise().done(function () {
-        //     console.log('end');
-        //     setTimeout(function () {
-        //         _.$slides.each(function () {
-        //             var self = this;
-        //             self.point -= move;
-        //             self.range -= move;
-        //             self.range = self.index - _.initials.thisIndex < 0 ? self.index - _.initials.thisIndex + _.initials.slideCount : self.index - _.initials.thisIndex;
-        //             self.left = _.initials.slideWidth * self.point;
-        //             var transform = 'translate3d(' + self.left + 'px, 0, 0)';
-        //             $(self).css(_.autoprefixer(0, transition, transform));
+    Eclipse.prototype.goToSlide = function (index) {
+        var _ = this;
+        if (_.initials.actionFlag) return;
+        _.initials.actionFlag = true;
+        _.initials.thisIndex = _.computedIndex(index);
+        _.initials.nextIndex = _.computedIndex(_.initials.thisIndex + 1);
+        _.initials.prevIndex = _.computedIndex(_.initials.thisIndex - 1);
 
-        //             setTimeout(function () {
-        //                 self.point = Math.abs(self.point) == _.initials.slideCount - 1 ? self.point < 0 ? 1 : -1 : self.point;
-        //                 self.left = _.initials.slideWidth * self.point;
-        //                 self.transform = self.left;
-        //                 _.initials.actionFlag = false;
-        //                 _.initials.touchstartFlag = false;
-        //                 _.initials.touchmoveFlag = false;
-        //                 // console.log('2', this.index, this.range, this.left);
-        //             }, _.options.speed);
-        //         });
-        //     }, 1);
-        // });
+        _.$slides.each(function () {
+            var self = this;
+            this.left = this.left = _.initials.slideWidth * (this.index - _.initials.thisIndex);
+            this.range = this.index - _.initials.thisIndex < 0 ? this.index - _.initials.thisIndex + _.initials.slideCount : this.index - _.initials.thisIndex;
+            var transform = 'translate3d(' + self.left + 'px, 0, 0)';
+            $(this).stop().css(_.autoprefixer(0, _.initials.transition, transform));
+            if (this.index === _.initials.thisIndex) {
+                $(this).addClass('eclipse-active').siblings().removeClass('eclipse-active');
+            }
+
+            setTimeout(function () {
+                self.left = _.initials.slideWidth * (self.index - _.initials.thisIndex);
+                self.transform = 'translate3d(' + self.left + 'px, 0, 0)';
+                $(self).stop().css(_.autoprefixer(0, 'none', self.transform));
+                _.initials.actionFlag = false;
+                _.initials.touchstartFlag = false;
+                _.initials.touchmoveFlag = false;
+
+                console.log(self.index, self.point, self.range);
+            }, _.options.speed);
+        })
+    }
+
+    Eclipse.prototype.setSideSlides = function (callback) {
+        var _ = this;
+        _.$slides.each(function () {
+            this.point = Math.abs(this.range) == _.initials.slideCount - 1 ? this.range < 0 ? 1 : -1 : this.range;
+            this.left = _.initials.slideWidth * this.point;
+            var transform = 'translate3d(' + this.left + 'px, 0, 0)';
+            $(this).stop().css(_.autoprefixer(0, 'none', transform));
+        }).promise().done(function () {
+            if (callback) {
+                setTimeout(function () {
+                    callback();
+                }, 10);
+            }
+        });
     }
 
     Eclipse.prototype.computedIndex = function (value) {
@@ -254,10 +291,19 @@
             _.touchstart(e);
         });
         _.$arrowPrev.on('click', function () {
-            _.goToPrevOrNext(-1);
+            if (_.initials.actionFlag) return;
+            _.setSideSlides(function () {
+                _.goToPrevOrNext(-1);
+            });
         });
         _.$arrowNext.on('click', function () {
-            _.goToPrevOrNext(1);
+            if (_.initials.actionFlag) return;
+            _.setSideSlides(function () {
+                _.goToPrevOrNext(1);
+            });
+        });
+        _.$pagingButton.on('click', function () {
+            _.goToSlide($(this).index());
         });
     }
 
