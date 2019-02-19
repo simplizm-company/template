@@ -110,7 +110,7 @@
         'load' : function () {
             ui.hello.init();
 
-            $$.matchmedia({
+            Y$.matchmedia({
                 matchDesktop : function () {
                     console.log('pc');
                 },
