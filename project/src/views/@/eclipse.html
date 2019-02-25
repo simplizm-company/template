@@ -8,9 +8,10 @@
 @@include('../@include/header.html')
 
         <style>
-            #eclipse div div {height: 300px; font-size: 50px; line-height: 300px; text-align: center; color: #ffffff;}
-            #eclipse .eclipse-wrap {width: 200px; margin: 0 auto;}
-            #eclipse .eclipse-active {z-index: 10;}
+            .eclipse-wrap {width: 1000px; margin: 0 auto; overflow: visible !important;}
+            .eclipse-slides {height: 300px; font-size: 50px; line-height: 300px; text-align: center; color: #ffffff;}
+            .eclipse-active {z-index: 10;}
+            .eclipse-active:after {display: block; content: ''; position: absolute; top: 0; left: 0; width: 50px; height: 50px; background: #ffffff;}
         </style>
         <div id="eclipse">
             <div class="eclipse-wrap">
@@ -19,12 +20,49 @@
                 <div style="background: #666;">03</div>
                 <div style="background: #999;">04</div>
             </div>
-        </div>
-        <script>
-            $(window).on('load', function () {
+            <script>
                 $('#eclipse').eclipse();
-            });
-        </script>
+            </script>
+        </div>
+        <div id="eclipse2">
+            <div class="eclipse-wrap">
+                <div style="background: #000;">01</div>
+                <div style="background: #333;">02</div>
+                <div style="background: #666;">03</div>
+                <div style="background: #999;">04</div>
+                <div style="background: #f00;">05</div>
+            </div>
+            <script>
+                $('#eclipse2').eclipse({
+                    startIndex: 0,
+                    slidesToShow: 2,
+                    move: 2,
+                    margin: 20
+                });
+            </script>
+        </div>
+        <div id="eclipse3">
+            <div class="eclipse-wrap">
+                <div style="background: #000;">01</div>
+                <div style="background: #333;">02</div>
+                <div style="background: #666;">03</div>
+                <div style="background: #999;">04</div>
+                <div style="background: #f00;">05</div>
+                <div style="background: #000;">06</div>
+                <div style="background: #333;">07</div>
+                <div style="background: #666;">08</div>
+                <div style="background: #999;">09</div>
+                <div style="background: #f00;">10</div>
+            </div>
+            <script>
+                $('#eclipse3').eclipse({
+                    startIndex: 0,
+                    slidesToShow: 3,
+                    move: 3,
+                    margin: 20
+                });
+            </script>
+        </div>
 
 @@include('../@include/footer.html')
     </div>
