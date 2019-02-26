@@ -1,5 +1,6 @@
-// 슬라이드 멈춰있을때 left: 각 위치
-// 슬라이드 이동할때 left: 0, transform: 각 위치
+
+
+// 양사이드 비는 현상
 
 
 
@@ -105,8 +106,8 @@
         if (nextIndex == 'next') {
             _.initials.thisPageIndex++;
             _.initials.thisPageIndex = _.initials.thisPageIndex !== _.initials.arrayCheckPoint.length ? _.initials.thisPageIndex : 0;
-            // console.log(_.initials.thisPageIndex);
-            // if (_.options.slidesToMove !== 1) {
+            console.log(_.initials.thisPageIndex);
+            if (_.options.slidesToMove !== 1) {
                 if (_.initials.thisPageIndex == _.initials.arrayCheckPoint.length - 1) {
                     computedNextIndex = _.initials.arrayCheckPoint.slice(-1)[0] % _.options.slidesToMove;
                 } else {
@@ -116,16 +117,16 @@
                         computedNextIndex = _.options.slidesToMove;
                     }
                 }
-            // } else {
-            //     computedNextIndex = 1;
-            // }
+            } else {
+                computedNextIndex = 1;
+            }
         }
 
         if (nextIndex == 'prev') {
             _.initials.thisPageIndex--;
             _.initials.thisPageIndex = _.initials.thisPageIndex !== -1 ? _.initials.thisPageIndex : _.initials.arrayCheckPoint.length - 1;
-            // console.log(_.initials.thisPageIndex);
-            // if (_.options.slidesToMove !== 1) {
+            console.log(_.initials.thisPageIndex);
+            if (_.options.slidesToMove !== 1) {
                 if (_.initials.thisPageIndex == _.initials.arrayCheckPoint.length - 2) {
                     computedNextIndex = -_.initials.arrayCheckPoint.slice(-1)[0] % _.options.slidesToMove;
                 } else {
@@ -135,9 +136,9 @@
                         computedNextIndex = -_.options.slidesToMove;
                     }
                 }
-            // } else {
-            //     computedNextIndex = -1;
-            // }
+            } else {
+                computedNextIndex = -1;
+            }
         }
 
         console.log(computedNextIndex);
@@ -158,9 +159,13 @@
         var movetype = nextIndex > _.initials.thisIndex ? 'next' : 'prev';
 
         if (_.initials.thisIndex !== nextIndex && !_.initials.playActionFlag) {
-            var computedNextIndex = nextIndex + (_.options.slidesToShow - 1) > _.initials.slidesCount - 1 ?
-            (_.initials.slidesCount - 1) - (_.options.slidesToShow - 1) :
-            nextIndex;
+            if (_.options.slidesToMove == 1) {
+                var computedNextIndex = nextIndex;
+            } else {
+                var computedNextIndex = nextIndex + (_.options.slidesToShow - 1) > _.initials.slidesCount - 1 ?
+                (_.initials.slidesCount - 1) - (_.options.slidesToShow - 1) :
+                nextIndex;
+            }
             _.preparationAction(movetype, function () {
                 _.$slides.each(function (i) {
                     this.point -= computedNextIndex - _.initials.thisIndex;
@@ -205,7 +210,11 @@
         }
 
         if (_.options.pager === true && _.initials.slidesCount > _.options.slidesToMove) {
-            _.initials.pagerComputedLength = Math.ceil((_.initials.slidesCount - _.options.slidesToShow) / _.options.slidesToMove) + 1;
+            if (_.options.slidesToMove == 1) {
+                _.initials.pagerComputedLength = _.initials.slidesCount;
+            } else {
+                _.initials.pagerComputedLength = Math.ceil((_.initials.slidesCount - _.options.slidesToShow) / _.options.slidesToMove) + 1;
+            }
             var paging = $('<div />').addClass(`${_.options.nameSpace}-paging`);
             for (var i = 1; i <= _.initials.pagerComputedLength; i++) {
                 paging.append($(`<button>${i}</button>`).addClass(`${_.options.nameSpace}-paging-button`));
@@ -281,11 +290,18 @@
         _.initials.sliderWidth = _.$slider.width();
         _.options.slidesToMove = _.initials.slidesCount / _.options.slidesToShow < _.options.slidesToMove ? 1 : _.options.slidesToMove;
 
-        for (var i = 0; i < _.initials.slidesCount; i++) {
-            if (i % _.options.slidesToMove == 0) {
-                _.initials.arrayCheckPoint.push(i + _.options.slidesToShow - 1 > _.initials.slidesCount - 1 ? i - (_.options.slidesToMove - 1) : i);
+        if (_.options.slidesToMove === 1) {
+            for (var i = 0; i < _.initials.slidesCount; i++) {
+                _.initials.arrayCheckPoint.push(i);
+            }
+        } else {
+            for (var i = 0; i < _.initials.slidesCount; i++) {
+                if (i % _.options.slidesToMove == 0 && _.initials.arrayCheckPoint.length < Math.ceil((_.initials.slidesCount - _.options.slidesToShow) / _.options.slidesToMove) + 1) {
+                    _.initials.arrayCheckPoint.push(i + _.options.slidesToShow - 1 > _.initials.slidesCount - 1 ? i - (_.options.slidesToMove - 1) : i);
+                }
             }
         }
+        console.log(_.initials.arrayCheckPoint)
     }
 
     Eclipse.prototype.clickStart = function (e) {
@@ -381,7 +397,6 @@
             // _.goToSlides(_.initials.slidesCount <= $(this).index() * _.options.slidesToShow + (_.options.slidesToShow - 1) ? $(this).index() * _.options.slidesToShow - (_.options.slidesToShow - 1) : $(this).index() * _.options.slidesToShow);
             _.initials.thisPageIndex = $(this).index();
             _.goToSlides(_.initials.arrayCheckPoint[$(this).index()]);
-            console.log(_.initials.arrayCheckPoint);
         });
     }
 
