@@ -68,27 +68,64 @@
 
         if (!_.initials.playActionFlag) {
             _.initials.playActionFlag = true;
+
+            var minPoint = _.initials.slidesCount;
+            var maxPoint = -1;
+            var minIndex = 0;
+            var maxIndex = 0;
+            var variable = 0;
+            _.appClone = [];
+            _.preClone = [];
+
             _.$slides.each(function (i) {
                 this.isView = undefined;
                 for (var j = 0; j < _.initials.viewIndex.length; j++) {
                     if (this.index === _.initials.viewIndex[j]) {
                         this.isView = _.initials.viewIndex.indexOf(_.initials.viewIndex[j]);
+                        $(this).removeClass(`eclipse-active eclipse-active-${j + 1}`);
                     }
                 }
-                if (prevOrNext === 'next') {
-                    this.point = i - _.initials.thisIndex < 0 ? i - _.initials.thisIndex + _.initials.slidesCount : i - _.initials.thisIndex;
+                if (_.initials.viewIndex.slice(-1)[0] < (_.options.slidesToShow - 1)) {
+                    variable = _.initials.viewIndex.slice(-1)[0] + 1;
                 }
-                if (prevOrNext === 'prev') {
-                    if (this.isView !== undefined) {
-                        this.point = this.isView;
-                    } else {
-                        this.point = i - _.initials.thisIndex > 0 ? i - _.initials.thisIndex - _.initials.slidesCount : i - _.initials.thisIndex;
-                    }
+                if (i >= variable && i < _.options.slidesToShow + variable) {
+                    var self = $(this).clone().appendTo(_.$slider).addClass('eclipse-clone')[0]
+                    self.index = i;
+                    self.width = this.width;
+                    _.appClone.push(self);
                 }
+                if (i > (_.initials.slidesCount - 1) - _.options.slidesToShow) {
+                    var self = $(this).clone().prependTo(_.$slider).addClass('eclipse-clone')[0]
+                    self.index = i;
+                    self.width = this.width;
+                    _.preClone.push(self);
+                }
+                this.point = this.isView !== undefined ? this.isView : i - _.initials.viewIndex[0];
                 this.left = this.width * this.point + (_.options.margin * this.point);
                 this.transform = 'translate3d(' + this.left + 'px, 0, 0)';
                 $(this).stop().css(_.autoPrefixer(0, 'none', this.transform));
+                if (maxPoint < this.point) {
+                    maxPoint = this.point;
+                    maxIndex = i;
+                }
+                if (minPoint > this.point) {
+                    minPoint = this.point;
+                    minIndex = i;
+                }
             }).promise().done(function () {
+                // console.log(maxIndex);
+                for (var i = 0; i < _.appClone.length; i++) {
+                    _.appClone[i].point = _.$slides.eq(maxIndex)[0].point + _.appClone[i].index + 1 - variable;
+                    _.appClone[i].left = _.appClone[i].width * _.appClone[i].point + (_.options.margin * _.appClone[i].point);
+                    _.appClone[i].transform = 'translate3d(' + _.appClone[i].left + 'px, 0, 0)';
+                    $(_.appClone[i]).stop().css(_.autoPrefixer(0, 'none', _.appClone[i].transform));
+                }
+                for (var i = 0; i < _.preClone.length; i++) {
+                    _.preClone[i].point = _.$slides.eq(minIndex)[0].point - (_.initials.slidesCount - _.preClone[i].index);
+                    _.preClone[i].left = _.preClone[i].width * _.preClone[i].point + (_.options.margin * _.preClone[i].point);
+                    _.preClone[i].transform = 'translate3d(' + _.preClone[i].left + 'px, 0, 0)';
+                    $(_.preClone[i]).stop().css(_.autoPrefixer(0, 'none', _.preClone[i].transform));
+                }
                 if (callback) {
                     setTimeout(function () {
                         callback();
@@ -96,6 +133,39 @@
                 }
             });
         }
+    }
+
+    Eclipse.prototype.afterationAction = function () {
+        var _ = this;
+
+        setTimeout(function () {
+            _.initials.playActionFlag = false;
+            _.removeClone(_.appClone);
+            _.removeClone(_.preClone);
+
+            _.$slides.each(function (i) {
+                this.isView = undefined;
+                for (var j = 0; j < _.initials.viewIndex.length; j++) {
+                    if (this.index === _.initials.viewIndex[j]) {
+                        this.isView = _.initials.viewIndex.indexOf(_.initials.viewIndex[j]);
+                    }
+                }
+                this.point = this.isView !== undefined ? this.isView : i - _.initials.viewIndex[0];
+                this.left = this.width * this.point + (_.options.margin * this.point);
+                this.transform = 'translate3d(' + this.left + 'px, 0, 0)';
+                $(this).stop().css(_.autoPrefixer(0, 'none', this.transform));
+            });
+        }, _.options.speed);
+    }
+
+    Eclipse.prototype.removeClone = function (target) {
+        var _ = this;
+
+        $(target).each(function () {
+            $(this).remove();
+        }).promise().done(function () {
+            target = [];
+        });
     }
 
     Eclipse.prototype.goToSlidesPrevOrNext = function (nextIndex) {
@@ -106,7 +176,6 @@
         if (nextIndex == 'next') {
             _.initials.thisPageIndex++;
             _.initials.thisPageIndex = _.initials.thisPageIndex !== _.initials.arrayCheckPoint.length ? _.initials.thisPageIndex : 0;
-            console.log(_.initials.thisPageIndex);
             if (_.options.slidesToMove !== 1) {
                 if (_.initials.thisPageIndex == _.initials.arrayCheckPoint.length - 1) {
                     computedNextIndex = _.initials.arrayCheckPoint.slice(-1)[0] % _.options.slidesToMove;
@@ -125,7 +194,6 @@
         if (nextIndex == 'prev') {
             _.initials.thisPageIndex--;
             _.initials.thisPageIndex = _.initials.thisPageIndex !== -1 ? _.initials.thisPageIndex : _.initials.arrayCheckPoint.length - 1;
-            console.log(_.initials.thisPageIndex);
             if (_.options.slidesToMove !== 1) {
                 if (_.initials.thisPageIndex == _.initials.arrayCheckPoint.length - 2) {
                     computedNextIndex = -_.initials.arrayCheckPoint.slice(-1)[0] % _.options.slidesToMove;
@@ -141,62 +209,101 @@
             }
         }
 
-        console.log(computedNextIndex);
+        _.setViewIndex(computedNextIndex);
 
-        _.$slides.each(function (i) {
-            this.point -= computedNextIndex;
-            this.left = this.width * this.point + (_.options.margin * this.point);
-            this.transform = 'translate3d(' + this.left + 'px, 0, 0)';
-            $(this).stop().css(_.autoPrefixer(0, _.initials.transition, this.transform));
+        function motionScript (target) {
+            target.point -= computedNextIndex;
+            target.left = target.width * target.point + (_.options.margin * target.point);
+            target.transform = 'translate3d(' + target.left + 'px, 0, 0)';
+            $(target).stop().css(_.autoPrefixer(0, _.initials.transition, target.transform));
+        }
+
+        $(_.appClone).each(function () {
+            motionScript(this);
         }).promise().done(function () {
-            _.initials.thisIndex = _.initials.computedIndexArray[_.initials.thisIndex + _.initials.slidesCount + computedNextIndex];
-            _.setSlideEnd(computedNextIndex);
+            _.setActiveClass($(_.appClone));
+        });
+
+        $(_.preClone).each(function () {
+            motionScript(this);
+        }).promise().done(function () {
+            _.setActiveClass($(_.preClone));
+        });
+
+        _.$slides.each(function () {
+            motionScript(this);
+        }).promise().done(function () {
+            _.setActiveClass(_.$slides);
+            _.afterationAction();
         });
     }
 
     Eclipse.prototype.goToSlides = function (nextIndex) {
         var _ = this;
-        var movetype = nextIndex > _.initials.thisIndex ? 'next' : 'prev';
+        var movetype = nextIndex > _.initials.viewIndex[0] ? 'next' : 'prev';
+        var thisIndex = _.initials.viewIndex[0];
 
-        if (_.initials.thisIndex !== nextIndex && !_.initials.playActionFlag) {
-            if (_.options.slidesToMove == 1) {
-                var computedNextIndex = nextIndex;
-            } else {
-                var computedNextIndex = nextIndex + (_.options.slidesToShow - 1) > _.initials.slidesCount - 1 ?
-                (_.initials.slidesCount - 1) - (_.options.slidesToShow - 1) :
-                nextIndex;
-            }
+        if (_.initials.viewIndex[0] !== nextIndex && !_.initials.playActionFlag) {
             _.preparationAction(movetype, function () {
-                _.$slides.each(function (i) {
-                    this.point -= computedNextIndex - _.initials.thisIndex;
-                    this.left = this.width * this.point + (_.options.margin * this.point);
-                    this.transform = 'translate3d(' + this.left + 'px, 0, 0)';
-                    $(this).stop().css(_.autoPrefixer(0, _.initials.transition, this.transform));
+                var computedNextIndex = nextIndex;
+                /*if (_.options.slidesToMove == 1) {
+                    var computedNextIndex = nextIndex;
+                } else {
+                    var computedNextIndex = nextIndex + (_.options.slidesToShow - 1) > _.initials.slidesCount - 1 ?
+                    (_.initials.slidesCount - 1) - (_.options.slidesToShow - 1) :
+                    nextIndex;
+                }*/
+        
+                function motionScript (target) {
+                    target.point += (thisIndex - computedNextIndex);
+                    // console.log(target.point);
+                    target.left = target.width * target.point + (_.options.margin * target.point);
+                    target.transform = 'translate3d(' + target.left + 'px, 0, 0)';
+                    $(target).stop().css(_.autoPrefixer(0, _.initials.transition, target.transform));
+                }
+
+                _.setViewIndex(computedNextIndex - _.initials.viewIndex[0]);
+
+                $(_.appClone).each(function () {
+                    motionScript(this);
                 }).promise().done(function () {
-                    _.setSlideEnd(computedNextIndex - _.initials.thisIndex);
-                    _.initials.thisIndex = computedNextIndex;
+                    _.setActiveClass($(_.appClone));
+                });
+        
+                $(_.preClone).each(function () {
+                    motionScript(this);
+                }).promise().done(function () {
+                    _.setActiveClass($(_.preClone));
+                });
+
+                _.$slides.each(function () {
+                    motionScript(this);
+                }).promise().done(function () {
+                    _.setActiveClass(_.$slides);
+                    _.afterationAction();
                 });
             });
         }
     }
 
-    Eclipse.prototype.setActiveClass = function (nextIndex) {
+    Eclipse.prototype.setViewIndex = function (nextIndex) {
         var _ = this;
 
-        _.$slides.removeClass('eclipse-active');
         for (var j = 0; j < _.initials.viewIndex.length; j++) {
             _.initials.viewIndex[j] = _.initials.computedIndexArray[_.initials.viewIndex[j] + _.initials.slidesCount + nextIndex];
-            _.$slides.eq(_.initials.viewIndex[j]).addClass(`eclipse-active eclipse-active-${j + 1}`).siblings().removeClass(`eclipse-active-${j + 1}`);
         }
     }
 
-    Eclipse.prototype.setSlideEnd = function (nextIndex) {
+    Eclipse.prototype.setActiveClass = function ($target) {
         var _ = this;
 
-        _.setActiveClass(nextIndex);
-        setTimeout(function () {
-            _.initials.playActionFlag = false;
-        }, _.options.speed);
+        $target.each(function (i) {
+            for (var j = 0; j < _.initials.viewIndex.length; j++) {
+                if (this.index === _.initials.viewIndex[j]) {
+                    $(this).addClass(`eclipse-active eclipse-active-${j + 1}`);
+                }
+            }
+        })
     }
 
     Eclipse.prototype.buildControls = function () {
@@ -276,9 +383,9 @@
             _.$slider.css({
                 'overflow': 'hidden',
                 'position': 'relative',
-                'height': _.$slides[_.initials.thisIndex].height
+                'height': _.$slides[_.initials.viewIndex[0]].height
             });
-            _.setActiveClass(0);
+            _.setActiveClass(_.$slides);
         });
     }
 
@@ -286,7 +393,6 @@
         var _ = this;
 
         _.initials.slidesCount = _.$slides.length;
-        _.initials.thisIndex = _.options.startIndex;
         _.initials.sliderWidth = _.$slider.width();
         _.options.slidesToMove = _.initials.slidesCount / _.options.slidesToShow < _.options.slidesToMove ? 1 : _.options.slidesToMove;
 

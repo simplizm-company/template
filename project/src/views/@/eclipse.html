@@ -8,14 +8,15 @@
 @@include('../@include/header.html')
 
         <style>
-            .eclipse-slider {width: 1000px; margin: 0 auto; overflow: hidden !important;}
+            .eclipse-slider {width: 500px; margin: 0 auto; overflow: hidden !important;}
             .eclipse-slider:after {display: block; content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; border: 5px solid green;}
-            .eclipse-slides {height: 300px; font-size: 50px; line-height: 300px; text-align: center; color: #ffffff;}
+            .eclipse-slides {height: 300px; font-size: 50px; line-height: 300px; text-align: center; color: #ffffff; z-index: 1;}
             .eclipse-active {z-index: 10;}
             .eclipse-active:after {display: block; content: ''; position: absolute; top: 0; left: 0; width: 50px; height: 50px; background: #ffffff; font-size: 20px; line-height: 50px; color: #000000;}
             .eclipse-active-1:after {content: '1';}
             .eclipse-active-2:after {content: '2';}
             .eclipse-active-3:after {content: '3';}
+            .eclipse-clone {z-index: 0 !important;}
 
             #eclipse6 .eclipse-slides {opacity: 0.2;}
             #eclipse6 .eclipse-active-2 {opacity: 1;}
@@ -116,9 +117,6 @@
                 <div style="background: #999;">04</div>
                 <div style="background: #000;">05</div>
                 <div style="background: #333;">06</div>
-                <div style="background: #666;">07</div>
-                <div style="background: #999;">08</div>
-                <div style="background: #000;">09</div>
                 <div style="background: #f00;">last</div>
             </div>
             <script>
