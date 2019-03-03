@@ -408,8 +408,6 @@
         } else {
             for (var i = 0; i < _.initials.slidesCount; i++) {
                 if (i % _.options.slidesToMove == 0 && _.initials.arrayCheckPoint.length < Math.ceil((_.initials.slidesCount - _.options.slidesToShow) / _.options.slidesToMove) + 1) {
-                    console.log(i);
-                    // _.initials.arrayCheckPoint.push(i + _.options.slidesToShow - 1 > _.initials.slidesCount - 1 ? i - (_.options.slidesToMove - 1) : i);
                     _.initials.arrayCheckPoint.push(i + _.options.slidesToShow - 1 > _.initials.slidesCount - 1 ? (_.initials.slidesCount - 1) - (_.options.slidesToShow - 1) : i);
                 }
             }
