@@ -1,10 +1,3 @@
-
-
-// 양사이드 비는 현상
-
-
-
-
 /*
  * Eclipse for jQuery
  * Version: 1.0.1
@@ -31,7 +24,7 @@
                 speed: 500, // 전환 속도
                 margin: 0, // slides 간격
                 friction: 200, // mousemove, touchmove 감도
-                countIndex: 0
+                countIndex: 0 // 첫번째 활성 슬라이드의 인덱스값을 조절
             }
 
             _.options = $.extend({}, _.defaults, settings);
@@ -306,8 +299,8 @@
         var _ = this;
 
         if (_.options.arrow === true) {
-            var prev = $(`<button>prev</button>`).addClass(`${_.options.nameSpace}-arrow ${_.options.nameSpace}-prev`),
-                next = $(`<button>next</button>`).addClass(`${_.options.nameSpace}-arrow ${_.options.nameSpace}-next`);
+            var prev = $(`<button>prev</button>`).addClass(`eclipse-arrow eclipse-prev`),
+                next = $(`<button>next</button>`).addClass(`eclipse-arrow eclipse-next`);
             _.$arrowPrev = prev.appendTo(_.$eclipse);
             _.$arrowNext = next.appendTo(_.$eclipse);
         }
@@ -318,9 +311,9 @@
             } else {
                 _.initials.pagerComputedLength = Math.ceil((_.initials.slidesCount - _.options.slidesToShow) / _.options.slidesToMove) + 1;
             }
-            var paging = $('<div />').addClass(`${_.options.nameSpace}-paging`);
+            var paging = $('<div />').addClass(`eclipse-paging`);
             for (var i = 1; i <= _.initials.pagerComputedLength; i++) {
-                paging.append($(`<button>${i}</button>`).addClass(`${_.options.nameSpace}-paging-button`));
+                paging.append($(`<button>${i}</button>`).addClass(`eclipse-paging-button`));
             }
             _.$paging = paging.appendTo(_.$eclipse);
             _.$pagingButton = _.$paging.children();
@@ -400,6 +393,7 @@
         _.initials.slidesCount = _.$slides.length;
         _.initials.sliderWidth = _.$slider.width();
         _.options.slidesToMove = _.initials.slidesCount - _.options.slidesToShow < _.options.slidesToMove ? 1 : _.options.slidesToMove;
+        _.initials.thisPageIndex = _.options.startIndex;
 
         if (_.options.slidesToMove === 1) {
             for (var i = 0; i < _.initials.slidesCount; i++) {
@@ -514,8 +508,9 @@
     Eclipse.prototype.init = function () {
         var _ = this;
 
+        _.$eclipse.addClass('eclipse-wrapper')
         _.$slider = _.$eclipse.find('.eclipse-slider');
-        _.$slides = _.$slider.children().addClass(`${_.options.nameSpace}-slides`);
+        _.$slides = _.$slider.children().addClass(`eclipse-slides`);
 
         _.setSlidesCSS();
         _.setInitials();

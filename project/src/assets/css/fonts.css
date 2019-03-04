@@ -23,3 +23,17 @@
     font-weight: 700;
     src: url("../fonts/NanumGothic-700.woff") format("woff");
 }
+
+@font-face {
+    font-family: NanumSquare;
+    font-style: normal;
+    font-weight: 400;
+    src: url("../fonts/NanumSquare-400.woff") format("woff");
+}
+
+@font-face {
+    font-family: NanumSquare;
+    font-style: normal;
+    font-weight: 700;
+    src: url("../fonts/NanumSquare-700.woff") format("woff");
+}

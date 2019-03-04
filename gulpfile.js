@@ -19,7 +19,7 @@ gulp.task('server', ['fonts', 'images', 'html', 'js', 'sass', 'css'], function (
     });
     gulp.watch('project/src/assets/fonts/**/*.*', ['fonts']);
     gulp.watch('project/src/assets/images/**/*.*', ['images']);
-    gulp.watch('project/src/**/*.html', ['html']);
+    gulp.watch('project/src/**/*.*', ['html']);
     gulp.watch('project/src/assets/js/**/*.js', ['js']);
     gulp.watch('project/src/assets/scss/**/*.scss', ['sass']);
     gulp.watch('project/src/assets/css/**/*.css', ['css']);
@@ -35,7 +35,7 @@ gulp.task('server', ['fonts', 'images', 'html', 'js', 'sass', 'css'], function (
 
 gulp.task('html', function () {
     return gulp
-        .src('project/src/views/**/*.html')
+        .src('project/src/views/**/*.*')
         .pipe(fileinclude({
             prefix: '@@',
             basepath: '@file'
