@@ -24,7 +24,9 @@
                 speed: 500, // 전환 속도
                 margin: 0, // slides 간격
                 friction: 200, // mousemove, touchmove 감도
-                countIndex: 0 // 첫번째 활성 슬라이드의 인덱스값을 조절
+                countIndex: 0, // 첫번째 활성 슬라이드의 인덱스값을 조절
+                autoplay: false, // 자동 롤링
+                interval: 3000 // 자동 롤링 시간 간격
             }
 
             _.options = $.extend({}, _.defaults, settings);
@@ -45,7 +47,8 @@
                 setMoveChecker: false,
                 arrayCheckPoint: [],
                 thisPageIndex: 0,
-                pagerComputedLength: 0
+                pagerComputedLength: 0,
+                autoplayInterval: null
             }
 
             _.$eclipse = $(element);
@@ -61,6 +64,11 @@
 
         if (!_.initials.playActionFlag) {
             _.initials.playActionFlag = true;
+
+            if (_.options.autoplay) {
+                _.stopAutoplay();
+                _.setAutoplay();
+            }
 
             var minPoint = _.initials.slidesCount;
             var maxPoint = -1;
@@ -168,17 +176,13 @@
         if (nextIndex == 'next') {
             _.initials.thisPageIndex++;
             _.initials.thisPageIndex = _.initials.thisPageIndex !== _.initials.arrayCheckPoint.length ? _.initials.thisPageIndex : 0;
-            console.log(_.options.slidesToMove)
             if (_.options.slidesToMove !== 1) {
                 if (_.initials.thisPageIndex == _.initials.arrayCheckPoint.length - 1 && _.initials.arrayCheckPoint.slice(-1)[0] + _.options.slidesToShow >= _.initials.slidesCount) {
-                    console.log('a');
                     computedNextIndex = _.initials.arrayCheckPoint.slice(-1)[0] % _.options.slidesToMove;
                 } else {
                     if (_.initials.thisPageIndex == 0) {
-                        console.log('b');
                         computedNextIndex = _.options.slidesToShow;
                     } else {
-                        console.log('c');
                         computedNextIndex = _.options.slidesToMove;
                     }
                 }
@@ -204,8 +208,6 @@
                 computedNextIndex = -1;
             }
         }
-
-        console.log(computedNextIndex);
 
         _.setViewIndex(computedNextIndex);
 
@@ -505,6 +507,24 @@
         });
     }
 
+    Eclipse.prototype.setAutoplay = function () {
+        var _ = this;
+
+        if (_.options.autoplay) {
+            _.initials.autoplayInterval = setInterval(function () {
+                _.preparationAction(function () {
+                    _.goToSlidesPrevOrNext('next');
+                });
+            }, _.options.interval);
+        }
+    }
+
+    Eclipse.prototype.stopAutoplay = function () {
+        var _ = this;
+
+        clearInterval(_.initials.autoplayInterval);
+    }
+
     Eclipse.prototype.init = function () {
         var _ = this;
 
@@ -517,6 +537,7 @@
         _.setSlidesEach();
         _.buildControls();
         _.setEvents();
+        _.setAutoplay();
     }
 
     $.fn.eclipse = function(){
