@@ -1,12 +1,10 @@
 <!doctype html>
 <html lang="ko">
 <head>
-@@include('../@include/head.html')
+@@include('views/@include/head.html')
 </head>
 <body>
     <div id="wrap">
-@@include('../@include/header.html')
-
         <article id="container">
             <button class="_btn h40 c1" onclick="window.popup1 = sunrise('../@popup/popup-01.html', {
                 background: true,
@@ -17,8 +15,6 @@
             <div class="ex"></div>
             <button onclick="window.popup1.popupClose()">popupclose</button>
         </article>
-
-@@include('../@include/footer.html')
     </div>
 </body>
 </html>

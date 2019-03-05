@@ -19,6 +19,8 @@ gulp.task('server', ['allfile', 'scss'], function () {
     });
     gulp.watch([
         'project/src/**/*.*',
+        '!project/src/views/@demo/**/*',
+        '!project/src/views/@include/**/*',
         '!project/src/**/*.scss'
     ], ['allfile']);
     gulp.watch('project/src/assets/scss/**/*.scss', ['scss']);
@@ -36,11 +38,13 @@ gulp.task('allfile', function () {
     return gulp
         .src([
             'project/src/**/*.*',
+            '!project/src/views/@demo/**/*',
+            '!project/src/views/@include/**/*',
             '!project/src/**/*.scss'
         ])
         .pipe(fileinclude({
             prefix: '@@',
-            basepath: '@file'
+            basepath: './project/src/'
         }))
         .pipe(gulp.dest('project/dist'))
 });
