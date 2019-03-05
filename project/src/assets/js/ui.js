@@ -6,25 +6,10 @@
     }
 
     ui.setElementsVariable = function () {
-        ui.$html      = $('html');
-        ui.$body      = $('body');
+        ui.$html  = $('html');
+        ui.$body  = $('body');
+        ui.$hello = $('._hello');
     }
-
-    // ui.slider = (function (_) {
-    //     return {
-    //         mainVisual : function () {
-    //             this.$mainVisual = $('#main .main_visual .slick-wrap').slick({
-    //                 fade : true,
-    //                 arrows : true,
-    //                 dots : false,
-    //                 infinite : true,
-    //                 slidesToShow : 1,
-    //                 slidesToScroll : 1,
-    //                 accessibility : false
-    //             });
-    //         }
-    //     }
-    // })(ui);
 
     ui.inputfile = function (target) {
         var $target = $(target), value = $target.val();
@@ -49,7 +34,7 @@
                 }
             },
             scroll : function (obj) {
-                if(_.winscrlT + _.winsizeH > obj.p && !obj.visible){
+                if(Y$.window.scrollTop + Y$.window.height > obj.p && !obj.visible){
                     $(obj).addClass('_visible');
                     $(window).off(obj.e);
                     obj.visible = true;
@@ -91,7 +76,7 @@
     }
 
     ui.textMarginCut = function (target) {
-        target.find('._').each(function (idx, obj) {
+        target.find('._').each(function () {
             this.$inner = $(this).wrapInner('<div>').children('div');
             this.lineHeight = parseInt($(this).css('line-height'));
             this.fontSize = parseInt($(this).css('font-size'));
