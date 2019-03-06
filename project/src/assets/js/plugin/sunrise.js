@@ -20,27 +20,38 @@
                     inline: false,
                     background: true,
                     centerMode: true,
-                    computedScroll: false,
-                    positionTop: 0,
-                    positionLeft: 0,
+                    position: {
+                        top: 0,
+                        left: 0
+                    },
+                    fixed: false,
                     pluginIndex: pluginIndex++,
                     openCallback: function () {},
                     closeCallback: function () {}
                 }
 
-            _.options = $.extend(defaults, settings);
+            _.options = _.hasOwnProperty(defaults, settings);
 
             _.init(true);
         };
         return sunrise;
     }());
 
-    Sunrise.prototype.getWindowProperty = function () {
+    Sunrise.prototype.hasOwnProperty = function (org, src) {
         var _ = this;
-        _.windowWidth = $(window).width();
-        _.windowHeight = $(window).height();
-        _.windowScrollY = $(window).scrollTop();
-        _.windowScrollX = $(window).scrollLeft();
+
+        for(var prop in src) {
+            if (!Object.prototype.hasOwnProperty.call(src, prop)) {
+                continue;
+            }
+            if ('object' === $.type(org[prop])) {
+                org[prop] = ($.isArray(org[prop]) ? src[prop].slice(0) : _.hasOwnProperty(org[prop], src[prop]));
+            } else {
+                org[prop] = src[prop];
+            }
+        }
+
+        return org;
     }
 
     Sunrise.prototype.setElements = function () {
@@ -57,24 +68,41 @@
     Sunrise.prototype.setPopupStyle = function () {
         var _ = this;
         if (_.options.centerMode) {
-            _.getWindowProperty();
             _.popupWidth = _.$outer.width();
             _.popupHeight = _.$outer.height();
-            if (_.popupWidth > _.windowWidth * 0.8) {
-                _.$outer.css({'left': _.windowScrollX + _.windowWidth * 0.1});
+
+            if (_.options.fixed) {
+                _.$outer.css({
+                    'position': 'fixed',
+                    'max-height': '80vh',
+                    'max-width': '80vw',
+                    'overflow': 'auto',
+                    'top': _.popupHeight > Y$.window.height * 0.8 ? '10vh' : (Y$.window.height - _.popupHeight) / 2,
+                    'left': _.popupWidth > Y$.window.width * 0.8 ? '10vw' : (Y$.window.width - _.popupWidth) / 2
+                });
             } else {
-                _.$outer.css({'left': _.windowScrollX + ((_.windowWidth - _.popupWidth) / 2)});
-            }
-            if (_.popupHeight > _.windowHeight * 0.8) {
-                _.$outer.css({'top': _.windowScrollY + _.windowHeight * 0.1});
-            } else {
-                _.$outer.css({'top': _.windowScrollY + ((_.windowHeight - _.popupHeight) / 2)});
+                if (_.popupWidth > Y$.window.width * 0.8) {
+                    _.$outer.css({
+                        'left': Y$.window.scrollLeft + Y$.window.width * 0.1,
+                        'padding-right': '10vw'
+                    });
+                } else {
+                    _.$outer.css({'left': Y$.window.scrollLeft + ((Y$.window.width - _.popupWidth) / 2)});
+                }
+    
+                if (_.popupHeight > Y$.window.height * 0.8) {
+                    _.$outer.css({
+                        'top': Y$.window.scrollTop + Y$.window.height * 0.1,
+                        'padding-bottom': '10vh'
+                    });
+                } else {
+                    _.$outer.css({'top': Y$.window.scrollTop + ((Y$.window.height - _.popupHeight) / 2)});
+                }
             }
         } else {
-            _.getWindowProperty();
             _.$outer.css({
-                'top': _.options.positionTop,
-                'left': _.options.positionLeft
+                'top': _.options.position.top,
+                'left': _.options.position.left
             });
         }
     }
@@ -88,6 +116,7 @@
 
     Sunrise.prototype.popupClose = function () {
         var _ = this;
+
         _.$wrapper.remove();
         _.options.closeCallback();
     }
@@ -101,6 +130,23 @@
         _.options.openCallback(data);
     }
 
+    Sunrise.prototype.innerImgLoaded = function (data) {
+        var _ = this;
+
+        if (_.$inner.find('img').length) {
+            var idx = 0;
+            var max = _.$inner.find('img').length;
+            _.$inner.find('img').one('load', function () {
+                idx++;
+                if (idx === max) {
+                    _.openEvents(data);
+                }
+            });
+        } else {
+            _.openEvents(data);
+        }
+    }
+
     Sunrise.prototype.getAjaxPopup = function () {
         var _ = this;
         if (!_.options.inline) {
@@ -109,36 +155,14 @@
                 timeout: 10000,
                 dataType: 'html',
                 success: function (data) {
-                    _.$inner.append(data);
-                    if (_.$inner.find('img').length) {
-                        var idx = 0;
-                        var max = _.$inner.find('img').length;
-                        _.$inner.find('img').one('load', function (obj) {
-                            idx++;
-                            if (idx === max) {
-                                _.openEvents(data);
-                            }
-                        });
-                    } else {
-                        _.openEvents(data);
-                    }
+                    var data = _.$inner.append(data).children()[0];
+                    _.innerImgLoaded(data);
                 }
             });
         } else {
-            var $data = _.$inner.append($(_.options.url).clone()).children(_.options.url);
-            $data.show();
-            if (_.$inner.find('img').length) {
-                var idx = 0;
-                var max = _.$inner.find('img').length;
-                _.$inner.find('img').one('load', function (obj) {
-                    idx++;
-                    if (idx === max) {
-                        _.openEvents();
-                    }
-                });
-            } else {
-                _.openEvents();
-            }
+            var $data = _.$inner.append($(_.options.url).clone()).children(_.options.url).show();
+            var data = $data[0];
+            _.innerImgLoaded(data);
         }
     }
 

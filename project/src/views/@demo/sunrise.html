@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+@@include('views/@include/head.html')
+</head>
+<body>
+    <div id="wrap">
+        <article id="container">
+            <div class="_btnbox">
+                <button class="_btn h40 c1" style="width: 200px;" onclick="$popup1 = sunrise('/views/@popup/popup-01.html', {
+                    background: true,
+                    centerMode: true,
+                    openCallback: function (data) {
+                        console.log(data);
+                    }
+                })">ajax 레이어팝업</button>
+                <button class="_btn h40 c1" style="width: 200px;" onclick="$popup2 = sunrise('#popup1', {
+                    inline: true,
+                    background: true,
+                    centerMode: true,
+                    openCallback: function (data) {
+                        console.log(data);
+                    }
+                })">문서내부 레이어팝업</button>
+            </div>
+            <button onclick="$popup1.popupClose()">popupclose</button>
+            <div class="_btnbox">
+                <button class="_btn h40 c1" style="width: 400px;" onclick="$popup3 = sunrise('/views/@popup/popup-02.html', {
+                    background: true,
+                    centerMode: true,
+                    openCallback: function (data) {
+                        console.log(data);
+                    }
+                })">길이가 긴 레이어 팝업 (global scroll)</button>
+                <button class="_btn h40 c1" style="width: 400px;" onclick="$popup4 = sunrise('/views/@popup/popup-02.html', {
+                    fixed: true,
+                    background: true,
+                    centerMode: true,
+                    openCallback: function (data) {
+                        console.log(data);
+                    }
+                })">길이가 긴 레이어 팝업 (popup scroll)</button>
+            </div>
+        </article>
+    </div>
+
+    <div id="popup1" class="_layer-popup" style="display: none;">
+        <div class="_layer-header">
+            <h1 class="_layer-title">문서 내부 레이어 팝업</h1>
+            <button class="_layer-close" sunrise="close">닫기</button>
+        </div>
+        <div class="_layer-contents">
+            <img src="http://news.kbs.co.kr/data/news/2016/11/15/3377687_hgv.png" alt="">
+        </div>
+    </div>
+</body>
+</html>
