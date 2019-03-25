@@ -1,63 +1,41 @@
-/*
- * sunrise for jQuery
- * Version: 1.0.1
- * Author: shinyongjun
- * Website: http://www.simplizm.com/
- */
-
-;(function ($) {
+(function($){
     'use strict';
 
-    var Sunrise = window.Sunrise || {};
+    var methods = SPZM.methods;
+    var element = SPZM.element;
+    var initial = SPZM.initial;
 
-    Sunrise = (function () {
+    var Sunrise = (function () {
         var pluginIndex = 0;
-        function sunrise (url, settings) {
-            var _ = this,
-                settings = settings === undefined ? {} : settings,
-                defaults = {
-                    url: url,
-                    inline: false,
-                    background: true,
-                    centerMode: true,
-                    position: {
-                        top: 0,
-                        left: 0
-                    },
-                    fixed: false,
-                    pluginIndex: pluginIndex++,
-                    openCallback: function () {},
-                    closeCallback: function () {}
-                }
+        function sunrise (target, settings) {
+            var _ = this;
+            var settings = settings === undefined ? {} : settings;
+            var defaults = {
+                pluginIndex: pluginIndex++,
+                target: target,
+                inline: false,
+                background: true,
+                centerMode: true,
+                position: {
+                    top: 0,
+                    left: 0
+                },
+                fixed: false,
+                openCallback: function () {},
+                closeCallback: function () {}
+            }
 
-            _.options = _.hasOwnProperty(defaults, settings);
+            _.options = methods.hasOwnProperty(defaults, settings);
 
             _.init(true);
-        };
-        return sunrise;
-    }());
-
-    Sunrise.prototype.hasOwnProperty = function (org, src) {
-        var _ = this;
-
-        for(var prop in src) {
-            if (!Object.prototype.hasOwnProperty.call(src, prop)) {
-                continue;
-            }
-            if ('object' === $.type(org[prop])) {
-                org[prop] = ($.isArray(org[prop]) ? src[prop].slice(0) : _.hasOwnProperty(org[prop], src[prop]));
-            } else {
-                org[prop] = src[prop];
-            }
         }
-
-        return org;
-    }
+        return sunrise;
+    })();
 
     Sunrise.prototype.setElements = function () {
         var _ = this;
-        _.$body = $('body');
-        _.$wrapper = _.$body.append('<div class="sunrise-wrapper"></div>').children('.sunrise-wrapper:last-child');
+
+        _.$wrapper = element.body.append('<div class="sunrise-wrapper"></div>').children('.sunrise-wrapper:last-child');
         if (_.options.background) {
             _.$back = _.$wrapper.append('<div class="sunrise-back" sunrise="close"></div>').children('.sunrise-back');
         }
@@ -77,26 +55,26 @@
                     'max-height': '80vh',
                     'max-width': '80vw',
                     'overflow': 'auto',
-                    'top': _.popupHeight > Y$.window.height * 0.8 ? '10vh' : (Y$.window.height - _.popupHeight) / 2,
-                    'left': _.popupWidth > Y$.window.width * 0.8 ? '10vw' : (Y$.window.width - _.popupWidth) / 2
+                    'top': _.popupHeight > initial.window.height * 0.8 ? '10vh' : (initial.window.height - _.popupHeight) / 2,
+                    'left': _.popupWidth > initial.window.width * 0.8 ? '10vw' : (initial.window.width - _.popupWidth) / 2
                 });
             } else {
-                if (_.popupWidth > Y$.window.width * 0.8) {
+                if (_.popupWidth > initial.window.width * 0.8) {
                     _.$outer.css({
-                        'left': Y$.window.scrollLeft + Y$.window.width * 0.1,
+                        'left': initial.window.scrollLeft + initial.window.width * 0.1,
                         'padding-right': '10vw'
                     });
                 } else {
-                    _.$outer.css({'left': Y$.window.scrollLeft + ((Y$.window.width - _.popupWidth) / 2)});
+                    _.$outer.css({'left': initial.window.scrollLeft + ((initial.window.width - _.popupWidth) / 2)});
                 }
     
-                if (_.popupHeight > Y$.window.height * 0.8) {
+                if (_.popupHeight > initial.window.height * 0.8) {
                     _.$outer.css({
-                        'top': Y$.window.scrollTop + Y$.window.height * 0.1,
+                        'top': initial.window.scrollTop + initial.window.height * 0.1,
                         'padding-bottom': '10vh'
                     });
                 } else {
-                    _.$outer.css({'top': Y$.window.scrollTop + ((Y$.window.height - _.popupHeight) / 2)});
+                    _.$outer.css({'top': initial.window.scrollTop + ((initial.window.height - _.popupHeight) / 2)});
                 }
             }
         } else {
@@ -123,7 +101,7 @@
 
     Sunrise.prototype.openEvents = function (data) {
         var _ = this;
-        ui.textMarginCut(_.$inner);
+        SPZM.methods.setTextEx.init();
         _.setPopupStyle();
         _.$outer.addClass('_visible');
         _.EventsBinding();
@@ -151,7 +129,7 @@
         var _ = this;
         if (!_.options.inline) {
             $.ajax({
-                url: _.options.url,
+                url: _.options.target,
                 timeout: 10000,
                 dataType: 'html',
                 success: function (data) {
@@ -160,7 +138,7 @@
                 }
             });
         } else {
-            var $data = _.$inner.append($(_.options.url).clone()).children(_.options.url).show();
+            var $data = _.$inner.append($(_.options.target).clone()).children(_.options.target).show();
             var data = $data[0];
             _.innerImgLoaded(data);
         }
@@ -172,8 +150,7 @@
         _.getAjaxPopup();
     }
 
-    window.sunrise = function () {
-        var _ = new Sunrise(arguments[0], arguments[1]);
-        return _;
+    SPZM.sunrise = function () {
+        return new Sunrise(arguments[0], arguments[1]);
     }
-}(jQuery));
+})(jQuery);
