@@ -2,7 +2,7 @@
     'use strict';
 
     // namespace : SPZM
-    var SPZM = window.SPZM = window.SPZM || {
+    var SPZM = window.SPZM = {
         initial: {},
         element: {},
         methods: {}
