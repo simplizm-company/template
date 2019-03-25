@@ -59,7 +59,9 @@ gulp.task('html', function () {
 gulp.task('scss', function () {
     return gulp
         .src('project/src/assets/scss/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }).on('error', sass.logError))
         .pipe(autoprefixer({
             browsers: ['last 2 versions', 'ie >= 9']
         }))
