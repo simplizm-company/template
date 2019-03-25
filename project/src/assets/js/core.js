@@ -71,7 +71,7 @@
             }
         }
         return org;
-    }
+    };
 
     methods.matchmedia = function (settings) {
         var defaults = {
