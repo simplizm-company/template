@@ -1,10 +1,3 @@
-/*
- * Eclipse for jQuery
- * Version: 1.0.1
- * Author: shinyongjun
- * Website: http://www.simplizm.com/
- */
-
 ;(function($){
     'use strict';
 
@@ -18,12 +11,15 @@
     var methods = SPZM.methods;
 
     methods.touchAndMouseEvents = (function () {
-        var isTouchSupported = 'ontouchstart' in document;
+        var eventType = {
+            clickstart: 'ontouchstart' in document ? 'touchstart' : 'mousedown',
+            clickmove: 'ontouchmove' in document ? 'touchmove' : 'mousemove',
+            clickend: 'ontouchend' in document ? 'touchend' : 'mouseup'
+        }
     
         $.event.special.clickstart = {
             setup: function() {
-                var eventtype = isTouchSupported ? 'touchstart' : 'mousedown';
-                $(this).on(eventtype + '.clickstart', function (e) {
+                $(this).on(eventType.clickstart + '.clickstart', function (e) {
                     e.type = 'clickstart';
                     e.pageX = e.pageX || e.originalEvent.touches[0].pageX;
                     e.pageY = e.pageY || e.originalEvent.touches[0].pageY;
@@ -37,8 +33,7 @@
     
         $.event.special.clickmove = {
             setup: function() {
-                var eventtype = isTouchSupported ? 'touchmove' : 'mousemove';
-                $(this).on(eventtype + '.clickmove', function (e) {
+                $(this).on(eventType.clickmove + '.clickmove', function (e) {
                     e.type = 'clickmove';
                     e.pageX = e.pageX || e.originalEvent.touches[0].pageX;
                     e.pageY = e.pageY || e.originalEvent.touches[0].pageY;
@@ -52,8 +47,7 @@
     
         $.event.special.clickend = {
             setup: function() {
-                var eventtype = isTouchSupported ? 'touchend' : 'mouseup';
-                $(this).on(eventtype + '.clickend', function (e) {
+                $(this).on(eventType.clickend + '.clickend', function (e) {
                     e.type = 'clickend';
                     ($.event.dispatch||$.event.handle).call(this, e);
                 });

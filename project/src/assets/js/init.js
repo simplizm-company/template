@@ -1,4 +1,4 @@
-(function($){
+;(function($){
     'use strict';
 
     var methods = SPZM.methods;
@@ -52,10 +52,13 @@
     var setTextEx = (function () {
         return {
             init: function () {
+                SPZM.methods.setTextEx = this.load;
+                this.load();
+            },
+            load: function () {
                 if (element.text) {
                     this.play();
                 }
-                SPZM.methods.setTextEx = this;
             },
             play: function () {
                 element.text.each(function () {

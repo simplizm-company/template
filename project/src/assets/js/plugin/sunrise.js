@@ -1,4 +1,4 @@
-(function($){
+;(function($){
     'use strict';
 
     var methods = SPZM.methods;
@@ -101,7 +101,7 @@
 
     Sunrise.prototype.openEvents = function (data) {
         var _ = this;
-        SPZM.methods.setTextEx.init();
+        SPZM.methods.setTextEx();
         _.setPopupStyle();
         _.$outer.addClass('_visible');
         _.EventsBinding();
