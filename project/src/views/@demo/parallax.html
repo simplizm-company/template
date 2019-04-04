@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+@@include('views/@include/head.html')
+</head>
+<body>
+<style>
+#parallax {}
+#parallax section {height: 300vh;}
+#parallax section.section1 {position: relative; background: #cccccc;}
+#parallax section.section1 .ground {position: sticky; top: 0; right: 0; width: 100%; height: 100vh;}
+#parallax section.section1 .ground .text1 {position: absolute; top: 200px; left: 200px;}
+#parallax section.section2 {background: #aaaaaa;}
+#parallax section.section3 {background: #999999;}
+</style>
+    <div id="parallax">
+        <section class="section1">
+            <div class="ground">
+                <p class="text1">text1</p>
+            </div>
+        </section>
+        <section class="section2">
+            
+        </section>
+        <section class="section3">
+            
+        </section>
+    </div>
+    <script>
+        $(window).on('scroll', function () {
+            $('.text1').css({'transform': 'translateX('+SPZM.initial.window.scrollTop * 0.5+'px)'})
+        });
+    </script>
+</body>
+</html>

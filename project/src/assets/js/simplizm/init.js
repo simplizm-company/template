@@ -20,13 +20,6 @@
     })();
 
     var elementsHello = (function () {
-        function helloAction (target) {
-            if(initial.window.scrollTop + initial.window.height > target.p && !target.visible){
-                $(target).addClass('_visible');
-                $(window).off(target.es);
-                target.visible = true;
-            }
-        }
         return {
             init: function () {
                 if (element.hello) {
@@ -34,17 +27,24 @@
                 }
             },
             play: function () {
+                var _ = this;
                 element.hello.each(function (i) {
-                    var $this = this;
                     this.t = $(this).offset().top;
                     this.h = $(this).outerHeight() / 2;
                     this.p = this.t + this.h;
-                    this.el = `load.hello-${i} `;
-                    this.es = `scroll.hello-${i}`;
-                    $(window).on(this.el + this.es, function () {
-                        helloAction($this);
-                    });
+                    this.el = 'load.hello-'+i;
+                    this.es = 'scroll.hello-'+i;
+                    $(window).on(this.el + ' ' + this.es, function () {
+                        _.action(this);
+                    }.bind(this));
                 });
+            },
+            action: function (target) {
+                if(initial.window.scrollTop + initial.window.height > target.p && !target.visible){
+                    $(target).addClass('_visible');
+                    $(window).off(target.es);
+                    target.visible = true;
+                }
             }
         }
     })();

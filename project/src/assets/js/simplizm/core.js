@@ -58,21 +58,6 @@
         };
     })();
 
-    methods.hasOwnProperty = function (org, src) {
-        var _ = this;
-        for(var prop in src) {
-            if (!Object.prototype.hasOwnProperty.call(src, prop)) {
-                continue;
-            }
-            if ('object' === $.type(org[prop])) {
-                org[prop] = ($.isArray(org[prop]) ? src[prop].slice(0) : _.hasOwnProperty(org[prop], src[prop]));
-            } else {
-                org[prop] = src[prop];
-            }
-        }
-        return org;
-    };
-
     methods.matchmedia = function (settings) {
         var defaults = {
             matchDesktop : function () {},
