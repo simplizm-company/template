@@ -5,7 +5,34 @@
 </head>
 <body>
     <div id="wrap">
-        <article id="container">
+        <article id="container"> 
+            <button> 0 </button>
+            <button> 1 </button>
+            <button> 2 </button>
+            <button> 3 </button>
+            <button> 4 </button>
+            <script>
+ 
+            // for문의 i값 재사용을 위해
+            // button에 이벤트 등록할때 event 객체에  data(key : velue)도 함께 등록
+            
+            /*for ( var i = 0; i < 5; i++ ) {
+            
+                $( "button" ).eq( i ).on( "click", { value: i }, function( event ) {
+                    console.log("button = " + $( this ).index());
+                    console.log("event.data.value = " + event.data.value);
+                    console.log("i = " + i);
+                });
+            }*/
+
+            $('button').each(function (i) {
+                $(this).on('click', {value: i}, function (e) {
+                    console.log(i, e.data.value, $(this).index());
+                });
+            });
+            
+            </script>
+
             <a href="input.html">input</a>
             <div class="_hello _left" style="width: 200px; height: 200px; margin: 0 0 100px; background: red;"></div>
             <div class="_hello _right" style="width: 200px; height: 200px; margin: 0 0 100px; background: red;"></div>

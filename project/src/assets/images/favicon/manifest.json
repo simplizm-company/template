@@ -1,5 +1,8 @@
 {
-    "name": "App",
+    "start_url": "/views/@demo/hello.html",
+    "name": "Simplizm",
+    "display": "standalone",
+    "theme_color": "#000000",
     "icons": [
         {
             "src": "\/assets\/images\/favicon\/android-icon-36x36.png",
