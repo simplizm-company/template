@@ -4,12 +4,35 @@
 @@include('views/@include/head.html')
 </head>
 <body>
-    <div id="wrap">
-        <article id="container">
-            <a href="input.html">input</a>
-            <a href="hello.html">hello</a>
-            <a href="scrolling.html">scrolling</a>
-        </article>
+    <style>
+        #chart {position: relative; margin: 100px auto; width: 450px; height: 400px; background: #f7f7f7;}
+        #chart .bar {position: absolute; bottom: 0; width: 50px; background: #007aae;}
+        #chart .bar:before {display: block; content: ''; position: absolute; bottom: 100%; left: 24px; z-index: 1; width: 2px; height: 0; background: #22b14c; transform-origin: left bottom; transition: all 500ms linear;}
+        #chart .bar:after {display: block; content: ''; position: absolute; top: -5px; left: 20px; z-index: 2; width: 10px; height: 10px; border-radius: 50%; background: #dd3535;}
+        #chart .bar:nth-child(1) {height: 80px; left: 50px;}
+        #chart .bar:nth-child(2) {height: 100px; left: 150px;}
+        #chart .bar:nth-child(3) {height: 150px; left: 250px;}
+        #chart .bar:nth-child(4) {height: 200px; left: 350px;}
+        #chart .bar:nth-child(1):before {transform: rotate(78deg);}
+        #chart .bar:nth-child(2):before {transform: rotate(63deg); transition-delay: 500ms;}
+        #chart .bar:nth-child(3):before {transform: rotate(63deg); transition-delay: 1000ms;}
+        #chart .bar:nth-child(4):before {display: none;}
+
+        #chart.load .bar:nth-child(1):before {height: 100px;}
+        #chart.load .bar:nth-child(2):before {height: 108px;}
+        #chart.load .bar:nth-child(3):before {height: 108px;}
+    </style>
+    <div id="chart">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
     </div>
+
+    <script>
+        $(window).on('load', function () {
+            $('#chart').addClass('load');
+        });
+    </script>
 </body>
 </html>
