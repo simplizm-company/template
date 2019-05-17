@@ -5,42 +5,45 @@
 </head>
 <body>
     <script>
-        var test = (function () {
-            function test (target, assets) {
-                var _ = this;
-
-                var a = this.assets = $.extend(true, {
-                    currentIndex: 0
-                }, assets);
-
-                var o = this.object = {
-                    tab: $(target).find('.tab button'),
-                    con: $(target).find('.con div')
-                }
+        var test = function (target, options) {
+            return new function () {
+                var _ = this, assets, object;
 
                 _.init = function () {
-                    _.action(a.currentIndex);
-                    _.events();
+                    assets = _.assets = $.extend(true, {
+                        currentIndex: 0
+                    }, options);
 
-                    return _;
+                    object = _.object = {
+                        tab: $(target).find('.tab button'),
+                        con: $(target).find('.con div')
+                    }
                 }
 
                 _.events = function () {
-                    o.tab.on('click', function () {
+                    object.tab.on('click', function () {
                         _.action($(this).index());
                     });
                 }
 
                 _.action = function (i) {
-                    o.con.eq(i).addClass('on').siblings().removeClass('on');
-                    a.currentIndex = i;
+                    object.con.eq(i).addClass('on').siblings().removeClass('on');
+                    assets.currentIndex = i;
                 }
 
-                return _.init();
-            }
+                return (function () {
+                    _.init();
+                    _.action(assets.currentIndex);
+                    _.events();
 
-            return test;
-        })();
+                    return _;
+                })();
+            }
+        };
+
+        var test2 = function () {
+            console.log(this);
+        }
     </script>
     <div id="wrap">
         <style>
@@ -74,14 +77,15 @@
     </div>
     <script>
         $(function () {
-            var a = new test('#tab1');
-            var b = new test('#tab2', {
+            var a = test('#tab1');
+            var b = test('#tab2', {
                 currentIndex: 1
             });
 
             $('#action').on('click', function () {
                 a.action($('#number').val());
                 b.action($('#number').val());
+                console.log(a, b);
             });
 
             $('#console').on('click', function () {
