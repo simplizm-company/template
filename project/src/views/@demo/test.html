@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+@@include('views/@include/head.html')
+</head>
+<body>
+    <script>
+        var test = (function () {
+            function test (target, assets) {
+                var _ = this;
+
+                var a = this.assets = $.extend(true, {
+                    currentIndex: 0
+                }, assets);
+
+                var o = this.object = {
+                    tab: $(target).find('.tab button'),
+                    con: $(target).find('.con div')
+                }
+
+                _.init = function () {
+                    _.action(a.currentIndex);
+                    _.events();
+
+                    return _;
+                }
+
+                _.events = function () {
+                    o.tab.on('click', function () {
+                        _.action($(this).index());
+                    });
+                }
+
+                _.action = function (i) {
+                    o.con.eq(i).addClass('on').siblings().removeClass('on');
+                    a.currentIndex = i;
+                }
+
+                return _.init();
+            }
+
+            return test;
+        })();
+    </script>
+    <div id="wrap">
+        <style>
+            .con > div {display: none;}
+            .con > div.on {display: block;}
+        </style>
+        <div id="tab1">
+            <div class="tab">
+                <button>tab 1</button>
+                <button>tab 2</button>
+            </div>
+            <div class="con">
+                <div class="on">con 1</div>
+                <div>con 2</div>
+            </div>
+        </div>
+
+        <div id="tab2">
+            <div class="tab">
+                <button>tab 1</button>
+                <button>tab 2</button>
+            </div>
+            <div class="con">
+                <div class="on">con 1</div>
+                <div>con 2</div>
+            </div>
+        </div>
+        <input type="number" id="number">
+        <button id="action">click</button>
+        <button id="console">console</button>
+    </div>
+    <script>
+        $(function () {
+            var a = new test('#tab1');
+            var b = new test('#tab2', {
+                currentIndex: 1
+            });
+
+            $('#action').on('click', function () {
+                a.action($('#number').val());
+                b.action($('#number').val());
+            });
+
+            $('#console').on('click', function () {
+                console.log(a.assets.currentIndex, b.assets.currentIndex);
+            });
+        });
+    </script>
+</body>
+</html>
