@@ -18,6 +18,8 @@
                         tab: $(target).find('.tab button'),
                         con: $(target).find('.con div')
                     }
+
+                    _.action(assets.currentIndex);
                 }
 
                 _.events = function () {
@@ -33,7 +35,6 @@
 
                 return (function () {
                     _.init();
-                    _.action(assets.currentIndex);
                     _.events();
 
                     return _;
@@ -41,9 +42,22 @@
             }
         };
 
-        var test2 = function () {
-            console.log(this);
-        }
+        $(function () {
+            var a = test('#tab1');
+            var b = test('#tab2', {
+                currentIndex: 1
+            });
+
+            $('#action').on('click', function () {
+                a.action($('#number').val());
+                b.action($('#number').val());
+                console.log(a, b);
+            });
+
+            $('#console').on('click', function () {
+                console.log(a.assets.currentIndex, b.assets.currentIndex);
+            });
+        });
     </script>
     <div id="wrap">
         <style>
@@ -71,27 +85,9 @@
                 <div>con 2</div>
             </div>
         </div>
-        <input type="number" id="number">
-        <button id="action">click</button>
+        <input type="number" id="number" style="width: 200px;">
+        <button id="action">click</button><br>
         <button id="console">console</button>
     </div>
-    <script>
-        $(function () {
-            var a = test('#tab1');
-            var b = test('#tab2', {
-                currentIndex: 1
-            });
-
-            $('#action').on('click', function () {
-                a.action($('#number').val());
-                b.action($('#number').val());
-                console.log(a, b);
-            });
-
-            $('#console').on('click', function () {
-                console.log(a.assets.currentIndex, b.assets.currentIndex);
-            });
-        });
-    </script>
 </body>
 </html>
