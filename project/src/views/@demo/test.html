@@ -48,10 +48,11 @@
                 currentIndex: 1
             });
 
-            $('#action').on('click', function () {
-                a.action($('#number').val());
-                b.action($('#number').val());
-                console.log(a, b);
+            $('#number').on('keyup', function (e) {
+                if (e.which === 13) {
+                    a.action($('#number').val());
+                    b.action($('#number').val());
+                }
             });
 
             $('#console').on('click', function () {
@@ -68,10 +69,12 @@
             <div class="tab">
                 <button>tab 1</button>
                 <button>tab 2</button>
+                <button>tab 3</button>
             </div>
             <div class="con">
                 <div class="on">con 1</div>
                 <div>con 2</div>
+                <div>con 3</div>
             </div>
         </div>
 
@@ -79,14 +82,15 @@
             <div class="tab">
                 <button>tab 1</button>
                 <button>tab 2</button>
+                <button>tab 3</button>
             </div>
             <div class="con">
                 <div class="on">con 1</div>
                 <div>con 2</div>
+                <div>con 3</div>
             </div>
         </div>
-        <input type="number" id="number" style="width: 200px;">
-        <button id="action">click</button><br>
+        <input type="number" id="number" style="width: 200px;"><br>
         <button id="console">console</button>
     </div>
 </body>
