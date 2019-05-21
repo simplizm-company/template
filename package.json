@@ -1,5 +1,5 @@
 {
-  "name": "final-default",
+  "name": "template",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,15 +17,15 @@
   },
   "homepage": "https://github.com/simplizm-company/final-default#readme",
   "devDependencies": {
-    "browser-sync": "^2.24.6",
+    "browser-sync": "^2.26.5",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-file-include": "^2.0.1",
     "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-uglify": "^3.0.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.2",
     "path": "^0.12.7"
   },
   "dependencies": {

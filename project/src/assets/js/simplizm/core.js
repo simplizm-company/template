@@ -1,16 +1,9 @@
 ;(function($){
     'use strict';
 
-    // namespace : SPZM
-    var SPZM = window.SPZM = {
-        initial: {},
-        element: {},
-        methods: {}
-    };
+    var SPZM = window.SPZM = {};
 
-    var methods = SPZM.methods;
-
-    methods.touchAndMouseEvents = (function () {
+    SPZM.touchAndMouseEvents = (function () {
         var eventType = {
             clickstart: 'ontouchstart' in document ? 'touchstart' : 'mousedown',
             clickmove: 'ontouchmove' in document ? 'touchmove' : 'mousemove',
@@ -58,27 +51,17 @@
         };
     })();
 
-    methods.matchmedia = function (settings) {
-        var defaults = {
-            matchDesktop : function () {},
-            matchMobile : function () {}
-        };
-        var options = $.extend({}, defaults, settings);
-        var media = window.matchMedia('(max-width: 750px)');
+    SPZM.getWindowInfo = (function () {
+        SPZM.window = {};
 
-        function matchesAction (paramse) {
-            if (!paramse.matches) {
-                options.matchDesktop();
-            } else {
-                options.matchMobile();
-            }
-        }
+        $(window).on('load scroll', function () {
+            SPZM.window.scrollTop = $(window).scrollTop();
+            SPZM.window.scrollLeft = $(window).scrollLeft();
+        });
 
-        if (matchMedia) {
-            matchesAction(media);
-            media.addListener(function (parameter) {
-                matchesAction(parameter);
-            });
-        }
-    };
+        $(window).on('load resize', function () {
+            SPZM.window.width = $(window).outerWidth();
+            SPZM.window.height = $(window).outerHeight();
+        });
+    })();
 }(jQuery));

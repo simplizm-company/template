@@ -1,127 +1,89 @@
 ;(function($){
     'use strict';
 
-    var methods = SPZM.methods;
-    var element = SPZM.element;
-    var initial = SPZM.initial;
+    SPZM.matchmedia = function (settings) {
+        var defaults = {
+            matchDesktop : function () {},
+            matchMobile : function () {}
+        };
+        var options = $.extend({}, defaults, settings);
+        var media = window.matchMedia('(max-width: 750px)');
 
-    var setElementsVariable = (function () {
-        return {
-            init: function () {
-                element.html = this.find('html');
-                element.body = this.find('body');
-                element.hello = this.find('._hello');
-                element.text = this.find('._');
-            },
-            find: function (target) {
-                return $(target).length ? $(target) : false;
+        function matchesAction (paramse) {
+            if (!paramse.matches) {
+                options.matchDesktop();
+            } else {
+                options.matchMobile();
             }
         }
-    })();
 
-    var elementsHello = (function () {
-        return {
-            init: function () {
-                if (element.hello) {
-                    this.play();
+        if (matchMedia) {
+            matchesAction(media);
+            media.addListener(function (parameter) {
+                matchesAction(parameter);
+            });
+        }
+    };
+
+    SPZM.elementsHello = function () {
+        return new function () {
+            var _ = this, object;
+            var e = 'load.hello$ scroll.hello$';
+
+            _.init = function () {
+                object = _.object = {
+                    hello: $('._hello')
                 }
-            },
-            play: function () {
-                var _ = this;
-                element.hello.each(function (i) {
-                    this.t = $(this).offset().top;
-                    this.h = $(this).outerHeight() / 2;
-                    this.p = this.t + this.h;
-                    this.el = 'load.hello-'+i;
-                    this.es = 'scroll.hello-'+i;
-                    $(window).on(this.el + ' ' + this.es, function () {
-                        _.action(this);
-                    }.bind(this));
-                });
-            },
-            action: function (target) {
-                if(initial.window.scrollTop + initial.window.height > target.p && !target.visible){
-                    $(target).addClass('_visible');
-                    $(window).off(target.es);
-                    target.visible = true;
+
+                if (object.hello.length) {
+                    _.play();
                 }
             }
-        }
-    })();
 
-    var setTextEx = (function () {
-        return {
-            init: function () {
-                SPZM.methods.setTextEx = this.load;
-                this.load();
-            },
-            load: function () {
-                if (element.text) {
-                    this.play();
+            _.play = function () {
+                object.hello.each(function (i, o) {
+                    var $o = $(o);
+                    o.t = $o.offset().top;
+                    o.h = $o.outerHeight() / 2;
+                    o.p = o.t + o.h;
+                    o.e = e.replace(/\$/g, i);
+
+                    $(window).on(o.e, function () {
+                        _.action(o);
+                    });
+                });
+            }
+
+            _.action = function (o) {
+                if (SPZM.window.scrollTop + SPZM.window.height > o.p && !o.visible) {
+                    $(o).addClass('_visible');
+                    $(window).off(o.e);
+                    o.visible = true;
                 }
-            },
-            play: function () {
-                element.text.each(function () {
-                    if (!this.ed) {
-                        this.ed = true;
-                        this.in = $(this).wrapInner('<div>').children('div');
-                        this.lh = parseInt($(this).css('line-height'));
-                        this.fz = parseInt($(this).css('font-size'));
-                        this.mg = (this.lh - this.fz) / this.fz;
-                        $(this).css({'display': 'flex'});
-                        this.in.css({'margin': (-this.mg) + 'ex 0'});
-                    }
-                });
             }
-        }
-    })();
 
-    var getWindowInfo = (function () {
-        initial.window = {};
+            return (function () {
+                _.init();
 
-        return {
-            init: function () {
-                this.scroll();
-                this.resize();
-            },
-            scroll: function () {
-                $(window).on('load scroll', function () {
-                    initial.window.scrollTop = $(window).scrollTop();
-                    initial.window.scrollLeft = $(window).scrollLeft();
-                });
-            },
-            resize: function () {
-                $(window).on('load resize', function () {
-                    initial.window.width = $(window).outerWidth();
-                    initial.window.height = $(window).outerHeight();
-                });
-            }
+                return _;
+            })();
         }
-    })();
+    };
 
     $(document).ready(function () {
-        getWindowInfo.init();
-        setElementsVariable.init();
-        elementsHello.init();
-        setTextEx.init();
+        SPZM.elementsHello();
     });
 
     $(window).on({
-        'load' : function () {
-            methods.matchmedia({
-                matchDesktop : function () {
+        'load': function () {
+            SPZM.matchmedia({
+                matchDesktop: function () {
                     console.log('pc');
                 },
-                matchMobile : function () {
+                matchMobile: function () {
                     console.log('mobile');
                 }
             });
-        },
-        'resize' : function () {
-            //
-        },
-        'scroll' : function () {
-            //
         }
     });
 })(jQuery);
