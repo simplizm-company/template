@@ -29,6 +29,7 @@
         return new function () {
             var _ = this, object;
             var e = 'load.hello$ scroll.hello$';
+            var w = SPZM.getWindowInfo;
 
             _.init = function () {
                 object = _.object = {
@@ -55,7 +56,7 @@
             }
 
             _.action = function (o) {
-                if (SPZM.window.scrollTop + SPZM.window.height > o.p && !o.visible) {
+                if (w.scrollTop + w.height > o.p && !o.visible) {
                     $(o).addClass('_visible');
                     $(window).off(o.e);
                     o.visible = true;
@@ -72,6 +73,8 @@
 
     $(document).ready(function () {
         SPZM.elementsHello();
+
+        console.log(SPZM);
     });
 
     $(window).on({

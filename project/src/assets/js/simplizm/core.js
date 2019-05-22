@@ -52,16 +52,18 @@
     })();
 
     SPZM.getWindowInfo = (function () {
-        SPZM.window = {};
+        var r = {};
 
         $(window).on('load scroll', function () {
-            SPZM.window.scrollTop = $(window).scrollTop();
-            SPZM.window.scrollLeft = $(window).scrollLeft();
+            r.scrollTop = $(window).scrollTop();
+            r.scrollLeft = $(window).scrollLeft();
         });
 
         $(window).on('load resize', function () {
-            SPZM.window.width = $(window).outerWidth();
-            SPZM.window.height = $(window).outerHeight();
+            r.width = $(window).outerWidth();
+            r.height = $(window).outerHeight();
         });
+
+        return r;
     })();
 }(jQuery));
